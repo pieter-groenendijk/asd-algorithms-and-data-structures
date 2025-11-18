@@ -1,5 +1,5 @@
 # Plan of Action
-Generic constraints:
+## Generic constraints
 
 - **Programming language: Golang**, I just like it and it can go relatively 
 low-level, has generics, built-in testing library. Slices will have to be
@@ -16,3 +16,8 @@ built-in testing library for both functionality as performance testing. 100%
 coverage. Performance testing shall be done using benchmark testing, to make
 comparison directly possible, and still usable in the future.
 
+## Choice of algorithms & data structures
+
+| Category | Choice |
+| --- | ------ |
+| Lists | Dynamic array (ArrayList) & linked list |
