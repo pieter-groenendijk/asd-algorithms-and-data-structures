@@ -1,22 +1,22 @@
 package linkedlist
 
-type node[TValue any] struct {
-	value TValue
-	next *node[TValue]
-}
-
 // A dummy node placed at the front of every LinkedList
 // By doing this, many special cases of linked list operations can be eliminated
-type headNode[TValue any] struct {
-	next *node[TValue]
+type node[TValue comparable] struct {
+	next *valueNode[TValue]
 }
 
-func newNode[TValue any](value TValue) *node[TValue] {
-	return &node[TValue]{
+type valueNode[TValue comparable] struct {
+	node[TValue]
+	value TValue
+}
+
+func newValueNode[TValue comparable](value TValue) *valueNode[TValue] {
+	return &valueNode[TValue]{
 		value: value,
 	}
 }
 
-func newHeadNode[TValue any]() *headNode[TValue] {
-	return &headNode[TValue]{}
+func newNode[TValue comparable]() *node[TValue] {
+	return &node[TValue]{}
 }

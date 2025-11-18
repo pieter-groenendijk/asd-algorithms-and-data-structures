@@ -28,10 +28,9 @@ import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/lists"
 	// Clear()
 */
 
-func (list *LinkedList[TValue]) Get(index uint) (TValue, error) {
+func (list *LinkedList[TValue]) getValueNode(index uint) (*valueNode[TValue], error) {
 	if index >= list.Size() {
-		var value TValue	
-		return value, lists.ErrOutOfBounds
+		return nil, lists.ErrOutOfBounds
 	}
 
 
@@ -41,15 +40,42 @@ func (list *LinkedList[TValue]) Get(index uint) (TValue, error) {
 		currentNode = currentNode.next
 	}
 
-	return currentNode.value, nil
+	return currentNode, nil
+}
+
+func (list *LinkedList[TValue]) Get(index uint) (TValue, error) {
+	node, err := list.getValueNode(index)
+	if err != nil {
+		var value TValue
+		return value, err
+	}
+
+	return node.value, err
 }
 
 func (list *LinkedList[TValue]) Add(value TValue) {
+	lastIndex := list.Size() - 1
+	lastNode, _ := list.getValueNode(lastIndex) // We can safely ignore the error return value
 
+	node := newValueNode(value)
+	lastNode.next = node
 }
 
 func (list *LinkedList[TValue]) Remove(value TValue) {
+	// Determine beforeNode
+	beforeNode := list.head
+	var removeNode *valueNode[TValue]
+	for ; beforeNode.next != nil; {
+		if beforeNode.next.value == value {
+			removeNode = beforeNode.next
+			break
+		}
 
+		beforeNode = &beforeNode.next.node // implicit conversion to be a *node, not *valueNode, to be compatible
+	}
+	afterNode := removeNode.next
+	
+	beforeNode.next = afterNode
 }
 
 func (list *LinkedList[TValue]) Size() uint {

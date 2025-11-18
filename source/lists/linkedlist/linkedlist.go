@@ -1,14 +1,14 @@
 package linkedlist
 
 
-type LinkedList[TValue any] struct {
-	head *headNode[TValue]
+type LinkedList[TValue comparable] struct {
+	head *node[TValue]
 	size uint
 }
 
-func New[TValue any]() *LinkedList[TValue] {
+func New[TValue comparable]() *LinkedList[TValue] {
 	return &LinkedList[TValue]{
-		head: newHeadNode[TValue](),
+		head: newNode[TValue](),
 		size: 0,
 	}
 }
