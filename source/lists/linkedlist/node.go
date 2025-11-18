@@ -11,12 +11,12 @@ type valueNode[TValue comparable] struct {
 	value TValue
 }
 
+func newNode[TValue comparable]() *node[TValue] {
+	return &node[TValue]{}
+}
+
 func newValueNode[TValue comparable](value TValue) *valueNode[TValue] {
 	return &valueNode[TValue]{
 		value: value,
 	}
-}
-
-func newNode[TValue comparable]() *node[TValue] {
-	return &node[TValue]{}
 }

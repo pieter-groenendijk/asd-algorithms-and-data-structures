@@ -1,6 +1,5 @@
 package linkedlist
 
-
 type LinkedList[TValue comparable] struct {
 	head *node[TValue]
 	size uint
