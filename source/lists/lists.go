@@ -3,11 +3,12 @@ package lists
 import "errors"
 
 var ErrOutOfBounds = errors.New("Out of bounds")
+var ErrNotFound = errors.New("Not found")
 
 // A sequence of values
 type List[TValue any] interface {
 	// Returns the element at the specified position in this list.
-	Get(index uint) (TValue, error)
+	Get(index int) (TValue, error)
 	// Returns true if this list contains the specified element.
 	// Contains(value TValue) bool
 	// Returns true if this list contains no elements.
@@ -30,5 +31,5 @@ type List[TValue any] interface {
 	// Clear()
 
 	// Returns the number of elements in this list.
-	Size() uint 
+	Size() int 
 }

@@ -2,7 +2,7 @@ package linkedlist
 
 type LinkedList[TValue comparable] struct {
 	head *node[TValue]
-	size uint
+	size int
 }
 
 func New[TValue comparable]() *LinkedList[TValue] {

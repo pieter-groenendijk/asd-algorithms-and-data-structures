@@ -18,6 +18,12 @@ header-includes:
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
 
+- In golang, the length of an array is part of it's type, meaning the length must be a constant. Only slices can
+be created with a length specified at runtime, which already is a dynamic array...
+
+- Not being able to specifically see if there is actually unallocated heap memory after the already defined underlying
+array is something only the built-in slice implementation may know. For our implementation we don't have this granular
+control and must reallocate a whole different array and copy the values upong growing.
 
 \newpage
 ## Linked list

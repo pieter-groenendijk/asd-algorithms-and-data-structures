@@ -2,13 +2,13 @@ package linkedlist
 
 import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/lists"
 
-func (list *LinkedList[TValue]) getValueNode(index uint) (*valueNode[TValue], error) {
-	if index >= list.Size() {
+func (list *LinkedList[TValue]) getValueNode(index int) (*valueNode[TValue], error) {
+	if index >= list.size || index < 0 {
 		return nil, lists.ErrOutOfBounds
 	}
 
 
-	var at uint = 0
+	var at int = 0
 	currentNode := list.head.next
 	for ; at < index ; at++ {
 		currentNode = currentNode.next
@@ -17,12 +17,12 @@ func (list *LinkedList[TValue]) getValueNode(index uint) (*valueNode[TValue], er
 	return currentNode, nil
 }
 
-func (list *LinkedList[TValue]) getNode(index uint) (*node[TValue], error) {
-	if index > list.Size() {
+func (list *LinkedList[TValue]) getNode(index int) (*node[TValue], error) {
+	if index > list.size || index < 0 {
 		return nil, lists.ErrOutOfBounds
 	}
 
-	var at uint = 0
+	var at int = 0
 	currentNode := list.head
 	for ; at < index ; at++ {
 		currentNode = &currentNode.next.node
@@ -31,7 +31,7 @@ func (list *LinkedList[TValue]) getNode(index uint) (*node[TValue], error) {
 	return currentNode, nil
 }
 
-func (list *LinkedList[TValue]) Get(index uint) (TValue, error) {
+func (list *LinkedList[TValue]) Get(index int) (TValue, error) {
 	node, err := list.getValueNode(index)
 	if err != nil {
 		var value TValue
@@ -72,6 +72,6 @@ func (list *LinkedList[TValue]) Remove(value TValue) {
 	beforeNode.next = afterNode
 }
 
-func (list *LinkedList[TValue]) Size() uint {
+func (list *LinkedList[TValue]) Size() int {
 	return list.size
 }

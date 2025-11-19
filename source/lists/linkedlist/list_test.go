@@ -16,7 +16,7 @@ func TestAdd(t *testing.T) {
 
 		gotNode := list.head.next
 		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
-		testutils.AssertEquals(t, uint(1), list.size)
+		testutils.AssertEquals(t, 1, list.size)
 	})
 
 	t.Run("subsequentAdds", func(t *testing.T) {
@@ -27,13 +27,13 @@ func TestAdd(t *testing.T) {
 
 		gotNode := list.head.next
 		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
-		testutils.AssertEquals(t, uint(1), list.size)
+		testutils.AssertEquals(t, 1, list.size)
 
 		list.Add(value)
 
 		gotNode = gotNode.next
 		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
-		testutils.AssertEquals(t, uint(2), list.size)
+		testutils.AssertEquals(t, 2, list.size)
 	})
 }
 
@@ -41,7 +41,7 @@ func TestGet(t *testing.T) {
 	type testCase struct {
 		name string
 		values []int
-		index uint
+		index int
 		expectedValue int
 		expectedError error
 	}
@@ -68,8 +68,8 @@ func TestGet(t *testing.T) {
 
 			gotValue, gotError := list.Get(test.index)
 
-			testutils.AssertEquals(t, gotValue, test.expectedValue)
-			testutils.AssertEquals(t, gotError, test.expectedError)
+			testutils.AssertEquals(t, test.expectedValue, gotValue)
+			testutils.AssertEquals(t, test.expectedError, gotError)
 		})
 	}
 }
@@ -104,8 +104,8 @@ func TestRemove(t *testing.T) {
 			list.Remove(test.removeValue)
 
 			for index, expectedValue := range test.expectedValues {
-				gottenValue, _ := list.Get(uint(index))
-				testutils.AssertEquals(t, gottenValue, expectedValue)
+				gottenValue, _ := list.Get(index)
+				testutils.AssertEquals(t, expectedValue, gottenValue)
 			}
 		})
 	}
