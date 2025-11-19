@@ -55,7 +55,11 @@ func (list *LinkedList[TValue]) Remove(value TValue) {
 	// Determine beforeNode
 	beforeNode := list.head
 	var removeNode *valueNode[TValue]
-	for ; beforeNode.next != nil; {
+	for ;; {
+		if beforeNode.next == nil {
+			return 
+		}
+
 		if beforeNode.next.value == value {
 			removeNode = beforeNode.next
 			break
