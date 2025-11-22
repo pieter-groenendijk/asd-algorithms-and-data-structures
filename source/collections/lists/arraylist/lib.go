@@ -1,6 +1,8 @@
 package arraylist
 
-import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/lists"
+import (
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
+)
 
 func (list *ArrayList[TValue]) maybeGrowCapacity() {
 	sizeNow := list.size
@@ -27,5 +29,5 @@ func (list *ArrayList[TValue]) indexOf(value TValue) (int, error) {
 		}
 	}
 
-	return 0, lists.ErrNotFound
+	return 0, collections.ErrNotFound
 }

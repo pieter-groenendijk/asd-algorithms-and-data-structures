@@ -1,6 +1,6 @@
 package linkedlist
 
-import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/lists"
+import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/lists"
 
 func (list *LinkedList[TValue]) getNode(index int) (*node[TValue], error) {
 	if index > list.size || index < 0 {

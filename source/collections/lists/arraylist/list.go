@@ -1,7 +1,7 @@
 package arraylist
 
 import (
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/lists"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/lists"
 )
 
 func (list *ArrayList[TValue]) Get(index int) (TValue, error) {

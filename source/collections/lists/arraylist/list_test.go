@@ -3,7 +3,7 @@ package arraylist
 import (
 	"testing"
 
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/lists"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/lists"
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/testutils"
 )
 
