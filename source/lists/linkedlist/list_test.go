@@ -14,7 +14,7 @@ func TestSet(t *testing.T) {
 		execParamValue int
 		execParamIndex int
 		expectNext *node[int]
-		expectErr err
+		expectErr error
 	}
 
 	cases := []testCase{
