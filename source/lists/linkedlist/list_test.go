@@ -7,7 +7,52 @@ import (
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/testutils"
 )
 
-func TestAdd(t *testing.T) {
+func TestPrepend(t *testing.T) {
+	type testCase struct {
+		name string
+		valueParams []int
+		expectNext *node[int]
+	}
+
+	cases := []testCase{
+		{
+			name: "prepend",
+			valueParams: []int{5},
+			expectNext: &node[int]{
+				value: 5,
+				next: nil,
+			},
+		},
+		{
+			name: "prependMultiple",
+			valueParams: []int{5, 3, 7},
+			expectNext: &node[int]{
+				value: 7,
+				next: &node[int]{
+					value: 3,
+					next: &node[int]{
+						value: 5,
+						next: nil,
+					},
+				}, 
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.name, func(t *testing.T) {
+			list := New[int]()
+
+			for _, valueParam := range test.valueParams {
+				list.Prepend(valueParam)
+			}
+
+			testutils.AssertEquals(t, test.expectNext, list.head.next)
+		})
+	}
+}
+
+func TestAppend(t *testing.T) {
 	t.Run("firstAdd", func(t *testing.T) {
 		list := New[int]()
 		value := 5
@@ -15,7 +60,7 @@ func TestAdd(t *testing.T) {
 		list.Append(value)
 
 		gotNode := list.head.next
-		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
+		testutils.AssertEquals(t, *gotNode, *newNode(value))
 		testutils.AssertEquals(t, 1, list.size)
 	})
 
@@ -26,13 +71,13 @@ func TestAdd(t *testing.T) {
 		list.Append(value)
 
 		gotNode := list.head.next
-		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
+		testutils.AssertEquals(t, *gotNode, *newNode(value))
 		testutils.AssertEquals(t, 1, list.size)
 
 		list.Append(value)
 
 		gotNode = gotNode.next
-		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
+		testutils.AssertEquals(t, *gotNode, *newNode(value))
 		testutils.AssertEquals(t, 2, list.size)
 	})
 }

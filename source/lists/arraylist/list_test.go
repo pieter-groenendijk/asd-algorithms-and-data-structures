@@ -7,7 +7,7 @@ import (
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/testutils"
 )
 
-func TestAdd(t *testing.T) {
+func TestAppend(t *testing.T) {
 	type testCase struct {
 		name string
 		initialCapacity int

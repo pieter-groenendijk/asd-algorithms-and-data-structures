@@ -20,7 +20,7 @@ func TestNewValueNode(t *testing.T) {
 	t.Run("NewValueNode", func(t *testing.T) {
 		value := 5
 
-		node := newValueNode(value)
+		node := newNode(value)
 
 		if node == nil {
 			t.Errorf("Node shouldn't be nil")

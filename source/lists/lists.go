@@ -17,11 +17,13 @@ type List[TValue any] interface {
 	// Iterator() 
 
 	// Replaces the element at the specified position in this list with the specified element. 
-	// SetAt(value TValue, index uint)
-	// Appends the specified element to the end of this list. 
+	// SetAt(value TValue, index int)
+	// Adds the specified element to the beginning of this list. 
+	Prepend(value TValue)
+	// Adds the specified element to the end of this list. 
 	Append(value TValue)
 	// Inserts the specified element at the specified position in this list.
-	// AddAt(value TValue, index uint)
+	// InsertAt(value TValue, index uint)
 
 	// Removes the first occurrence of the specified element from this list, if it is present.
 	Remove(value TValue)

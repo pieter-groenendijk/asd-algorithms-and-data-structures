@@ -11,7 +11,7 @@ func newDummyNode[TValue comparable]() *node[TValue] {
 	return &node[TValue]{}
 }
 
-func newValueNode[TValue comparable](value TValue) *node[TValue] {
+func newNode[TValue comparable](value TValue) *node[TValue] {
 	return &node[TValue]{
 		value: value,
 		next: nil,

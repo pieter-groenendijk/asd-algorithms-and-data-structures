@@ -10,11 +10,22 @@ func (list *LinkedList[TValue]) Get(index int) (TValue, error) {
 	return node.value, err
 }
 
+func (list *LinkedList[TValue]) Prepend(value TValue) {
+	beforeNode := list.head
+	afterNode := beforeNode.next
+	node := newNode(value)
+
+	beforeNode.next = node
+	node.next = afterNode
+
+	list.size++
+}
+
 func (list *LinkedList[TValue]) Append(value TValue) {
 	lastIndex := list.size 
 	lastNode, _ := list.getNode(lastIndex) // We can safely ignore the error return value; we're never out of bounds
 
-	node := newValueNode(value)
+	node := newNode(value)
 	lastNode.next = node
 
 	list.size++
