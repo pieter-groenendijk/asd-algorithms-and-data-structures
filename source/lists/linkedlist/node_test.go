@@ -4,7 +4,7 @@ import "testing"
 
 func TestNewNode(t *testing.T) {
 	t.Run("NewNode", func(t *testing.T) {
-		node := newNode[int]()
+		node := newDummyNode[int]()
 
 		if node == nil {
 			t.Errorf("Node shouldn't be nil")

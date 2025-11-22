@@ -41,7 +41,7 @@ func TestAdd(t *testing.T) {
 			list := New[int](test.initialCapacity)
 
 			for _, addValue := range test.addValues {
-				list.Add(addValue)
+				list.Append(addValue)
 			}
 
 			testutils.AssertEquals(t, test.expected, list)
@@ -76,7 +76,7 @@ func TestGet(t *testing.T) {
 			list := New[int](10)
 
 			for _, value := range test.values {
-				list.Add(value)
+				list.Append(value)
 			}
 
 			gotValue, gotError := list.Get(test.index)
@@ -111,7 +111,7 @@ func TestRemove(t *testing.T) {
 			list := New[int](6)
 
 			for _, value := range test.values {
-				list.Add(value)
+				list.Append(value)
 			}
 
 			list.Remove(test.removeValue)

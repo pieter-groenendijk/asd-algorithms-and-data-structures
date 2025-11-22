@@ -7,7 +7,7 @@ type LinkedList[TValue comparable] struct {
 
 func New[TValue comparable]() *LinkedList[TValue] {
 	return &LinkedList[TValue]{
-		head: newNode[TValue](),
+		head: newDummyNode[TValue](),
 		size: 0,
 	}
 }

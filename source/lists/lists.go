@@ -19,7 +19,7 @@ type List[TValue any] interface {
 	// Replaces the element at the specified position in this list with the specified element. 
 	// SetAt(value TValue, index uint)
 	// Appends the specified element to the end of this list. 
-	Add(value TValue)
+	Append(value TValue)
 	// Inserts the specified element at the specified position in this list.
 	// AddAt(value TValue, index uint)
 

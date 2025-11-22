@@ -12,7 +12,7 @@ func TestAdd(t *testing.T) {
 		list := New[int]()
 		value := 5
 
-		list.Add(value)
+		list.Append(value)
 
 		gotNode := list.head.next
 		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
@@ -23,13 +23,13 @@ func TestAdd(t *testing.T) {
 		list := New[int]()
 		value := 5
 
-		list.Add(value)
+		list.Append(value)
 
 		gotNode := list.head.next
 		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
 		testutils.AssertEquals(t, 1, list.size)
 
-		list.Add(value)
+		list.Append(value)
 
 		gotNode = gotNode.next
 		testutils.AssertEquals(t, *gotNode, *newValueNode(value))
@@ -63,7 +63,7 @@ func TestGet(t *testing.T) {
 			list := New[int]()
 
 			for _, value := range test.values {
-				list.Add(value)
+				list.Append(value)
 			}
 
 			gotValue, gotError := list.Get(test.index)
@@ -98,7 +98,7 @@ func TestRemove(t *testing.T) {
 			list := New[int]()
 
 			for _, value := range test.values {
-				list.Add(value)
+				list.Append(value)
 			}
 
 			list.Remove(test.removeValue)
