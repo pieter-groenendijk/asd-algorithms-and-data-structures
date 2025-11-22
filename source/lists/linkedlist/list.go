@@ -10,6 +10,17 @@ func (list *LinkedList[TValue]) Get(index int) (TValue, error) {
 	return node.value, err
 }
 
+func (list *LinkedList[TValue]) Set(value TValue, index int) error {
+	node, err := list.getNode(index + 1)
+	if err != nil {
+		return err
+	}
+
+	node.value = value
+
+	return nil
+}
+
 func (list *LinkedList[TValue]) Prepend(value TValue) {
 	beforeNode := list.head
 	afterNode := beforeNode.next

@@ -7,6 +7,121 @@ import (
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/testutils"
 )
 
+func TestSet(t *testing.T) {
+	type testCase struct {
+		name string
+		preparedValues []int
+		execParamValue int
+		execParamIndex int
+		expectNext *node[int]
+		expectErr err
+	}
+
+	cases := []testCase{
+		{
+			name: "firstValueSet",
+			preparedValues: []int{5, 3, 5},
+			execParamValue: 8,
+			execParamIndex: 0,
+			expectNext: &node[int]{
+				value: 8,
+				next: &node[int]{
+					value: 3,
+					next: &node[int]{
+						value: 5,
+						next: nil,
+					},
+				},
+			},
+			expectErr: nil,
+		},
+		{
+			name: "middleValueSet",
+			preparedValues: []int{8, 1, 3},
+			execParamValue: 5,
+			execParamIndex: 1,
+			expectNext: &node[int]{
+				value: 8,
+				next: &node[int]{
+					value: 5,
+					next: &node[int]{
+						value: 3,
+						next: nil,
+					},
+				},
+			},
+			expectErr: nil,
+		},
+		{
+			name: "lastValueSet",
+			preparedValues: []int{8, 1, 3},
+			execParamValue: 5,
+			execParamIndex: 2,
+			expectNext: &node[int]{
+				value: 8,
+				next: &node[int]{
+					value: 1,
+					next: &node[int]{
+						value: 5,
+						next: nil,
+					},
+				},
+			},
+			expectErr: nil,
+		},
+		{
+			name: "singleAndLastValueSet",
+			preparedValues: []int{1},
+			execParamValue: 5,
+			execParamIndex: 0,
+			expectNext: &node[int]{
+				value: 5,
+				next: nil,
+			},
+			expectErr: nil,
+		},
+		{
+			name: "paramIndexBeforeBounds",
+			preparedValues: []int{},
+			execParamValue: 5,
+			execParamIndex: -5,
+			expectNext: nil,
+			expectErr: lists.ErrOutOfBounds,
+		},
+		{
+			name: "paramIndexAfterBounds",
+			preparedValues: []int{8, 1, 3},
+			execParamValue: 5,
+			execParamIndex: 3,
+			expectNext: &node[int]{
+				value: 8,
+				next: &node[int]{
+					value: 1,
+					next: &node[int]{
+						value: 3,
+						next: nil,
+					},
+				},
+			},
+			expectErr: lists.ErrOutOfBounds,
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.name, func(t *testing.T) {
+			list := New[int]()
+			for _, preparedValue := range test.preparedValues {
+				list.Append(preparedValue)
+			}
+
+			err := list.Set(test.execParamValue, test.execParamIndex)
+
+			testutils.AssertEquals(t, test.expectNext, list.head.next)
+			testutils.AssertEquals(t, test.expectErr, err)
+		})
+	}
+}
+
 func TestPrepend(t *testing.T) {
 	type testCase struct {
 		name string
