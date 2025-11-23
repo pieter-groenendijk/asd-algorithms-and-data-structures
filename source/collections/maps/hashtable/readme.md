@@ -127,6 +127,10 @@ So, decomposition time:
 - Make collision resolving algorithm independently (not easily possible, since it affects the data structure?)
 - Implement a simple hash table implementation
 - Make it unit tested
+- Document permanent part
+
+- Figure out resizing
 - Figure out prehashing
 - Implement universal hashing algorithm or something more smart and recognized
 - Document choice
+- Optimize it
