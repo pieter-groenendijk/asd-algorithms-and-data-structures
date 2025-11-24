@@ -10,9 +10,9 @@ import (
 func TestHash(t *testing.T) {
 	type testCase struct {
 		name string
-		paramValue int
-		paramSize int
-		expectResult int
+		paramValue uint32 
+		paramSize uint32 
+		expectResult uint32 
 		expectErr error
 	}
 
@@ -50,13 +50,6 @@ func TestHash(t *testing.T) {
 			paramSize: 0,
 			expectResult: 0,
 			expectErr: hashing.ErrNoHashRoom,
-		},
-		{
-			name: "negativeValue",
-			paramValue: -1,
-			paramSize: 123,
-			expectResult: -1,
-			expectErr: hashing.ErrValueIsNegative,
 		},
 	}
 
