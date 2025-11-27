@@ -123,14 +123,14 @@ Over my head...
 
 So, decomposition time:
 
-- Let's start with the dead simple division method for a hashing function
-- Make collision resolving algorithm independently (not easily possible, since it affects the data structure?)
-- Implement a simple hash table implementation
-- Make it unit tested
-- Document permanent part
+- [x] Let's start with the dead simple division method for a hashing function
+- [ ] Make collision resolving algorithm independently (not easily possible, since it affects the data structure?)
+- [X] Implement a simple hash table implementation
+- [ ] Make it unit tested
+- [ ] Document permanent part
 
-- Figure out resizing
-- Figure out prehashing
-- Implement universal hashing algorithm or something more smart and recognized
-- Document choice
-- Optimize it
+- [ ] Figure out resizing
+- [ ] Figure out prehashing
+- [X] Implement universal hashing algorithm or something more smart and recognized
+- [ ] Document choice
+- [ ] Optimize it

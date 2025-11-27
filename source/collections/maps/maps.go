@@ -5,9 +5,9 @@ import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collect
 type Map[TKey string, TValue any] interface {
 	collections.Collection
 	// Sets the mapping for the specifiek key in this map
-	Set(key TKey, value TValue) error
+	Set(key TKey, value TValue) 
 	// Unsets the mapping for the specified key in this map
-	Unset(key TKey) error
+	Unset(key TKey) 
 	// Gets the value for the specified key in this map
 	Get(key TKey) (TValue, error)
 }

@@ -5,6 +5,6 @@ package hashing
 // value >= 0  
 // 
 // size >= 1, can't return any value if ther are less than 1 options to choose from.  
-type Hash func(value uint32, size int) (int, error)
+type Hash func(value uint32, size uint32) (uint32, error)
 
 
