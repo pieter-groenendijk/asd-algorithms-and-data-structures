@@ -1,4 +1,14 @@
-package v2
+package linkedlistv2 
+
+func (l *LinkedList[TKey, TValue]) Get2(key TKey) (TValue, error) {
+	_node, err := l.GetNode(key)
+	if err != nil {
+		var value TValue
+		return value, err
+	}
+
+	return _node.Value(), nil
+}
 
 func (l *LinkedList[TKey, TValue]) Append(node Node[TKey, TValue]) {
 	l.InsertAfter(l.appendAfter, node)

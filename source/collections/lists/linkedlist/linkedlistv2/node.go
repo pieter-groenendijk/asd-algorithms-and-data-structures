@@ -1,10 +1,11 @@
-package v2
+package linkedlistv2 
 
 import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
 
 type Node[TKey comparable, TValue any] interface {
 	Is(key TKey) bool
 	Value() TValue
+	SetValue(value TValue)
 	Next() Node[TKey, TValue]
 	SetNext(node Node[TKey, TValue])
 }
@@ -23,6 +24,21 @@ func (l *LinkedList[TKey, TValue]) GetNodeBefore(key TKey) (Node[TKey, TValue], 
 
 		currentNode = afterNode
 		afterNode = afterNode.Next()
+	}
+}
+
+func (l *LinkedList[TKey, TValue]) GetNode(key TKey) (Node[TKey, TValue], error) {
+	currentNode := l.dummyHead
+	for {
+		if currentNode == nil {
+			return nil, collections.ErrNotFound
+		}
+
+		if currentNode.Is(key) {
+			return currentNode, nil
+		}
+
+		currentNode = currentNode.Next()
 	}
 }
 

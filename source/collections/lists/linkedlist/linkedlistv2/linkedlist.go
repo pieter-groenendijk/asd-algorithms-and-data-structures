@@ -1,4 +1,4 @@
-package v2
+package linkedlistv2
 
 type LinkedList[TKey comparable, TValue any] struct {
 	dummyHead Node[TKey, TValue] // first node; a dummy node to prevent conditionals
