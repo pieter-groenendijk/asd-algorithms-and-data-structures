@@ -7,38 +7,6 @@ import (
 
 type Bucket[TKey string, TValue any] linkedlistv2.LinkedList[TKey, TValue]
 
-type bucketNode[TKey string, TValue any] struct {
-	key TKey
-	value TValue
-	next linkedlistv2.Node[TKey, TValue]
-}
-
-func (n *bucketNode[TKey, TValue]) Is(key TKey) bool {
-	return n.key == key
-}
-
-func (n *bucketNode[TKey, TValue]) Value() TValue {
-	return n.value
-}
-
-func (n *bucketNode[TKey, TValue]) SetValue(value TValue) {
-	n.value = value
-}
-
-func (n *bucketNode[TKey, TValue]) Next() linkedlistv2.Node[TKey, TValue] {
-	return n.next
-}
-
-func (n *bucketNode[TKey, TValue]) SetNext(node linkedlistv2.Node[TKey, TValue]) {
-	n.next = node
-}
-
-// 	is(key TKey) bool
-// 	value() TValue
-// 	SetValue(value TValue)
-// 	Next() node[TKey, TValue]
-// 	SetNext(node node[TKey, TValue])
-
 func (b *Bucket[TKey, TValue]) AsList() *linkedlistv2.LinkedList[TKey, TValue] {
 	return (*linkedlistv2.LinkedList[TKey, TValue])(b)
 }
@@ -66,6 +34,17 @@ func (b *Bucket[TKey, TValue]) Set(key TKey, value TValue) {
 	} else {
 		node.SetValue(value)
 	}
+}
+
+func (b *Bucket[TKey, TValue]) Unset(key TKey) {
+	list := b.AsList()
+
+	node, err := list.GetNodeBefore(key)
+	if err == collections.ErrNotFound {
+		return // nothing to do
+	} 
+
+	list.RemoveAfter(node)
 }
 
 // func (b *Bucket[TKey, TValue]) getNode(key TKey) (*node[TKey, TValue], error) {
