@@ -13,23 +13,23 @@ type bucketNode[TKey string, TValue any] struct {
 	next linkedlistv2.Node[TKey, TValue]
 }
 
-func (n bucketNode[TKey, TValue]) Is(key TKey) bool {
+func (n *bucketNode[TKey, TValue]) Is(key TKey) bool {
 	return n.key == key
 }
 
-func (n bucketNode[TKey, TValue]) Value() TValue {
+func (n *bucketNode[TKey, TValue]) Value() TValue {
 	return n.value
 }
 
-func (n bucketNode[TKey, TValue]) SetValue(value TValue) {
+func (n *bucketNode[TKey, TValue]) SetValue(value TValue) {
 	n.value = value
 }
 
-func (n bucketNode[TKey, TValue]) Next() linkedlistv2.Node[TKey, TValue] {
+func (n *bucketNode[TKey, TValue]) Next() linkedlistv2.Node[TKey, TValue] {
 	return n.next
 }
 
-func (n bucketNode[TKey, TValue]) SetNext(node linkedlistv2.Node[TKey, TValue]) {
+func (n *bucketNode[TKey, TValue]) SetNext(node linkedlistv2.Node[TKey, TValue]) {
 	n.next = node
 }
 
@@ -59,7 +59,7 @@ func (b *Bucket[TKey, TValue]) Set(key TKey, value TValue) {
 
 	node, err := list.GetNode(key)
 	if err == collections.ErrNotFound {
-		list.Prepend(bucketNode[TKey, TValue]{
+		list.Prepend(&bucketNode[TKey, TValue]{
 			key: key,
 			value: value,
 		})
