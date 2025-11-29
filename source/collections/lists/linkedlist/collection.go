@@ -2,15 +2,18 @@ package linkedlist
 
 import "iter"
 
-func (list *LinkedList[TValue]) Iterator() iter.Seq[TValue] {
+func (l *LinkedList[TKey, TValue]) All() iter.Seq[TValue] {
 	return func(yield func(TValue) bool) {
-		var at int = 0
-		currentNode := list.head.next
-		for ; at < list.size; at++ {
-			if !yield(currentNode.value) {
+		currentNode := l.dummyHead.Next()
+		for {
+			if currentNode == nil {
 				return
 			}
-			currentNode = currentNode.next
+			if !yield(currentNode.Value()) {
+				return
+			}
+
+			currentNode = currentNode.Next()
 		}
 	}
 }
