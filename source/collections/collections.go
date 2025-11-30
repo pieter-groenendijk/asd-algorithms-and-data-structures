@@ -1,6 +1,8 @@
 package collections
 
-type Collection interface {
+import "iter"
+
+type Collection[TValue any] interface {
 	// Returns an iterator over the elements in this collection.
-	Iterator() 
+	All() iter.Seq[TValue]
 }

@@ -1,11 +1,17 @@
 package adlist
 
-type Id int
+import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/graphs"
 
-type AdjacencyList struct {
-	vertices map[Id]*Vertex
+type AdjacencyList[TVertex graphs.Vertex[TEdge], TEdge graphs.Edge[TVertex]] struct {
+	vertices map[graphs.Id]TVertex
 
-	lastUsedId Id
+	lastUsedId graphs.Id
 }
 
+func New[TVertex graphs.Vertex[TEdge], TEdge graphs.Edge[TVertex]]() *AdjacencyList[TVertex, TEdge] {
+	return &AdjacencyList[TVertex, TEdge]{
+		vertices: make(map[graphs.Id]TVertex),
+		lastUsedId: -1,
+	}
+}
 

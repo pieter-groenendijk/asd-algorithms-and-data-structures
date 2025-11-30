@@ -1,8 +1,22 @@
 package adlist
 
-import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
+import (
+	"fmt"
 
-func (g *AdjacencyList) AddVertex(vertex *Vertex) Id {
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/graphs"
+)
+
+func (g *AdjacencyList[TVertex, TEdge]) GetVertex(id graphs.Id) (TVertex, error) {
+	vertex, hasVertex := g.vertices[id]
+	if !hasVertex {
+		return vertex, fmt.Errorf("failed to get vertex: %w", collections.ErrNotFound)
+	}
+
+	return vertex, nil
+}
+
+func (g *AdjacencyList[TVertex, TEdge]) AddVertex(vertex TVertex) graphs.Id {
 	id := g.newId()
 
 	g.vertices[id] = vertex
@@ -10,14 +24,29 @@ func (g *AdjacencyList) AddVertex(vertex *Vertex) Id {
 	return id
 }
 
-func (g *AdjacencyList) RemoveVertex(id Id) {
+func (g *AdjacencyList[TVertex, TEdge]) RemoveVertex(id graphs.Id) {
 	delete(g.vertices, id)
 }
 
-func (g *AdjacencyList) AddEdge(fromVertexId Id, edge *Edge) (Id, error) {
-	vertex, hasVertex := g.vertices[fromVertexId]
-	if !hasVertex {
-		return -1, collections.ErrNotFound
+func (g *AdjacencyList[TVertex, TEdge]) GetEdge(fromVertex graphs.Id, edgeId graphs.Id) (TEdge, error) {
+	vertex, err := g.GetVertex(fromVertex)
+	if err != nil {
+		var edge TEdge
+		return edge, fmt.Errorf("failed to get edge: %w", err)
+	}
+
+	edge, err := vertex.GetEdge(edgeId)
+	if err != nil {
+		return edge, err
+	}
+
+	return edge, nil
+}
+
+func (g *AdjacencyList[TVertex, TEdge]) AddEdge(fromVertexId graphs.Id, edge TEdge) (graphs.Id, error) {
+	vertex, err := g.GetVertex(fromVertexId)
+	if err != nil {
+		return -1, fmt.Errorf("failed to add edge: %w", err)
 	}
 
 	id := g.newId()
@@ -26,12 +55,14 @@ func (g *AdjacencyList) AddEdge(fromVertexId Id, edge *Edge) (Id, error) {
 	return id, nil
 }
 
-func (g *AdjacencyList) RemoveEdge(fromVertexId Id, id Id) {
-	vertex, hasVertex := g.vertices[fromVertexId]
-	if !hasVertex {
-		return
+func (g *AdjacencyList[TVertex, TEdge]) RemoveEdge(fromVertexId, id graphs.Id) error {
+	vertex, err := g.GetVertex(fromVertexId)
+	if err != nil {
+		return fmt.Errorf("failed to remove edge: %w", err)
 	}
 
 	vertex.RemoveEdge(fromVertexId)
+
+	return nil
 }
 

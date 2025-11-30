@@ -2,4 +2,4 @@ package collections
 
 import "errors"
 
-var ErrNotFound = errors.New("Not found")
+var ErrNotFound = errors.New("Requested data (partly) not found")
