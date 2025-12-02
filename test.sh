@@ -5,6 +5,6 @@ SOURCE_DIR="${DIR}/source"
 
 cd "$SOURCE_DIR"
 
-go test --cover ./...
+go test --cover --bench=. ./...
 
 cd "$DIR"

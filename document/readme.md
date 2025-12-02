@@ -62,7 +62,7 @@ control and must reallocate a whole different array and copy the values upong gr
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
 
-## [sort implementation]
+## Insertion sort
 <!--
     - Je implementeert een merge sort algoritme en 1 ander sorteeralgoritme naar 
     keuze (NIET parallel merge sort) en maakt een vergelijking tussen de implementaties.

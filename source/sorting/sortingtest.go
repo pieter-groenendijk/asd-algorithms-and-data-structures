@@ -1,6 +1,8 @@
 package sorting
 
 import (
+	"math"
+	"math/rand"
 	"testing"
 
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/testutils"
@@ -53,4 +55,80 @@ func TestSortInPlace(t *testing.T, sortInPlaceFunc SortInPlaceFunc[int]) {
 			testutils.AssertEquals(t, test.expectItems, test.givenItems)
 		})
 	}
+}
+
+func getRandomInts(length int, maxValue int) []int {
+	list := make([]int, length)
+	for i := 0; i < length; i++ {
+		list[i] = rand.Intn(maxValue)
+	}
+
+	return list
+}
+
+func benchmarkSortNInPlace(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int], length int, maxValue int, doPreSort bool) {
+	items := getRandomInts(length, maxValue)
+	if doPreSort {
+		sortInPlaceFunc(items)
+	}
+
+	for b.Loop() {
+		sortInPlaceFunc(items)
+	}
+}
+
+// Benchmark:
+// length: TINY
+// value range: large
+// sorted: false
+func BenchmarkSortTinyLength(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
+	benchmarkSortNInPlace(b, sortInPlaceFunc, 10, math.MaxInt, false)
+}
+
+// Benchmark:
+// length: SMALL
+// value range: large
+// sorted: false
+func BenchmarkSortSmallLength(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
+	benchmarkSortNInPlace(b, sortInPlaceFunc, 100, math.MaxInt, false)
+}
+
+// Benchmark:
+// length: MEDIUM
+// value range: large
+// sorted: false
+func BenchmarkSortMediumLength(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
+	benchmarkSortNInPlace(b, sortInPlaceFunc, 1_000, math.MaxInt, false)
+}
+
+// Benchmark:
+// length: LARGE
+// value range: large
+// sorted: false
+func BenchmarkSortLargeLength(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
+	benchmarkSortNInPlace(b, sortInPlaceFunc, 10_000, math.MaxInt, false)
+}
+
+// Benchmark:
+// length: medium
+// value range: medium
+// sorted: TRUE
+func BenchmarkSortAlreadySorted(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
+	benchmarkSortNInPlace(b, sortInPlaceFunc, 1_000, math.MaxInt, true)
+}
+
+// Benchmark:
+// length: medium
+// value range: SMALL
+// sorted: false
+func BenchmarkSmallValueRange(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
+	benchmarkSortNInPlace(b, sortInPlaceFunc, 1_000, 10, false)
+}
+
+// Benchmark:
+// length: medium
+// value range: LARGE
+// sorted: false
+func BenchmarkLargeValueRange(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
+	benchmarkSortNInPlace(b, sortInPlaceFunc, 1_000, math.MaxInt, false)
 }
