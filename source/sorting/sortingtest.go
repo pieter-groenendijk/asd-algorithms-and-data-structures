@@ -1,6 +1,7 @@
 package sorting
 
 import (
+	"cmp"
 	"math"
 	"math/rand"
 	"testing"
@@ -8,7 +9,7 @@ import (
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/testutils"
 )
 
-func TestSortInPlace(t *testing.T, sortInPlaceFunc SortInPlaceFunc[int]) {
+func TestSort(t *testing.T, sortFunc SortFunc[int]) {
 	type testCase struct {
 		name string
 		givenItems []int
@@ -50,10 +51,18 @@ func TestSortInPlace(t *testing.T, sortInPlaceFunc SortInPlaceFunc[int]) {
 
 	for _, test := range testCases {
 		t.Run(test.name, func(t *testing.T) {
-			sortInPlaceFunc(test.givenItems)
+			gotItems := sortFunc(test.givenItems)
 
-			testutils.AssertEquals(t, test.expectItems, test.givenItems)
+			testutils.AssertEquals(t, test.expectItems, gotItems)
 		})
+	}
+}
+
+func AsSortFunc[T cmp.Ordered](sortInPlaceFunc SortInPlaceFunc[T]) SortFunc[T] {
+	return func(list []T) []T {
+		sortInPlaceFunc(list)
+
+		return list
 	}
 }
 
@@ -66,14 +75,14 @@ func getRandomInts(length int, maxValue int) []int {
 	return list
 }
 
-func benchmarkSortNInPlace(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int], length int, maxValue int, doPreSort bool) {
+func benchmarkSortNInPlace(b *testing.B, sortFunc SortFunc[int], length int, maxValue int, doPreSort bool) {
 	items := getRandomInts(length, maxValue)
 	if doPreSort {
-		sortInPlaceFunc(items)
+		sortFunc(items)
 	}
 
 	for b.Loop() {
-		sortInPlaceFunc(items)
+		sortFunc(items)
 	}
 }
 
@@ -81,54 +90,54 @@ func benchmarkSortNInPlace(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int], l
 // length: TINY
 // value range: large
 // sorted: false
-func BenchmarkSortTinyLength(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
-	benchmarkSortNInPlace(b, sortInPlaceFunc, 10, math.MaxInt, false)
+func BenchmarkSortTinyLength(b *testing.B, sortFunc SortFunc[int]) {
+	benchmarkSortNInPlace(b, sortFunc, 10, math.MaxInt, false)
 }
 
 // Benchmark:
 // length: SMALL
 // value range: large
 // sorted: false
-func BenchmarkSortSmallLength(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
-	benchmarkSortNInPlace(b, sortInPlaceFunc, 100, math.MaxInt, false)
+func BenchmarkSortSmallLength(b *testing.B, sortFunc SortFunc[int]) {
+	benchmarkSortNInPlace(b, sortFunc, 100, math.MaxInt, false)
 }
 
 // Benchmark:
 // length: MEDIUM
 // value range: large
 // sorted: false
-func BenchmarkSortMediumLength(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
-	benchmarkSortNInPlace(b, sortInPlaceFunc, 1_000, math.MaxInt, false)
+func BenchmarkSortMediumLength(b *testing.B, sortFunc SortFunc[int]) {
+	benchmarkSortNInPlace(b, sortFunc, 1_000, math.MaxInt, false)
 }
 
 // Benchmark:
 // length: LARGE
 // value range: large
 // sorted: false
-func BenchmarkSortLargeLength(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
-	benchmarkSortNInPlace(b, sortInPlaceFunc, 10_000, math.MaxInt, false)
+func BenchmarkSortLargeLength(b *testing.B, sortFunc SortFunc[int]) {
+	benchmarkSortNInPlace(b, sortFunc, 10_000, math.MaxInt, false)
 }
 
 // Benchmark:
 // length: medium
 // value range: medium
 // sorted: TRUE
-func BenchmarkSortAlreadySorted(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
-	benchmarkSortNInPlace(b, sortInPlaceFunc, 1_000, math.MaxInt, true)
+func BenchmarkSortAlreadySorted(b *testing.B, sortFunc SortFunc[int]) {
+	benchmarkSortNInPlace(b, sortFunc, 1_000, math.MaxInt, true)
 }
 
 // Benchmark:
 // length: medium
 // value range: SMALL
 // sorted: false
-func BenchmarkSmallValueRange(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
-	benchmarkSortNInPlace(b, sortInPlaceFunc, 1_000, 10, false)
+func BenchmarkSmallValueRange(b *testing.B, sortFunc SortFunc[int]) {
+	benchmarkSortNInPlace(b, sortFunc, 1_000, 10, false)
 }
 
 // Benchmark:
 // length: medium
 // value range: LARGE
 // sorted: false
-func BenchmarkLargeValueRange(b *testing.B, sortInPlaceFunc SortInPlaceFunc[int]) {
-	benchmarkSortNInPlace(b, sortInPlaceFunc, 1_000, math.MaxInt, false)
+func BenchmarkLargeValueRange(b *testing.B, sortFunc SortFunc[int]) {
+	benchmarkSortNInPlace(b, sortFunc, 1_000, math.MaxInt, false)
 }
