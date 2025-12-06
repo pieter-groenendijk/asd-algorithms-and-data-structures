@@ -1,4 +1,4 @@
-package mergesort 
+package mergesort
 
 import (
 	"testing"
@@ -7,34 +7,34 @@ import (
 )
 
 func TestSort(t *testing.T) {
-	sorting.TestSort(t, Sort)
+	sorting.TestSort(t, sorting.AsSortFunc[int](Sort))
 }
 
 // Wrapper functions for your benchmarks
 func BenchmarkSortTinyLength(b *testing.B) {
-	sorting.BenchmarkSortTinyLength(b, Sort)
+	sorting.BenchmarkSortTinyLength(b, sorting.AsSortFunc[int](Sort))
 }
 
 func BenchmarkSortSmallLength(b *testing.B) {
-	sorting.BenchmarkSortSmallLength(b, Sort)
+	sorting.BenchmarkSortSmallLength(b, sorting.AsSortFunc[int](Sort))
 }
 
 func BenchmarkSortMediumLength(b *testing.B) {
-	sorting.BenchmarkSortMediumLength(b, Sort)
+	sorting.BenchmarkSortMediumLength(b, sorting.AsSortFunc[int](Sort))
 }
 
 func BenchmarkSortLargeLength(b *testing.B) {
-	sorting.BenchmarkSortLargeLength(b, Sort)
+	sorting.BenchmarkSortLargeLength(b, sorting.AsSortFunc[int](Sort))
 }
 
 func BenchmarkSortAlreadySorted(b *testing.B) {
-	sorting.BenchmarkSortAlreadySorted(b, Sort)
+	sorting.BenchmarkSortAlreadySorted(b, sorting.AsSortFunc[int](Sort))
 }
 
 func BenchmarkSmallValueRange(b *testing.B) {
-	sorting.BenchmarkSmallValueRange(b, Sort)
+	sorting.BenchmarkSmallValueRange(b, sorting.AsSortFunc[int](Sort))
 }
 
 func BenchmarkLargeValueRange(b *testing.B) {
-	sorting.BenchmarkLargeValueRange(b, Sort)
+	sorting.BenchmarkLargeValueRange(b, sorting.AsSortFunc[int](Sort))
 }
