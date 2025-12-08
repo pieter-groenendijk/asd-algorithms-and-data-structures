@@ -14,27 +14,33 @@ func Sort[T cmp.Ordered](list []T) []T {
 		writeTo[listLength - 1] = readFrom[listLength - 1]
 	}
 
+	var leftStartAt int
+	var rightStartAt int
+	var rightEndedAt int 
+
+	var nextLeftAt int
+	var nextRightAt int
+	var insertAt int
+
 	partLength := 1
 	mergeLength := 2
 	for partLength < listLength {
-		leftStartAt := 0
-		rightStartAt := leftStartAt + partLength
-		rightEndedAt := min(mergeLength, listLength)
+		leftStartAt = 0
+		rightStartAt = leftStartAt + partLength
+		rightEndedAt = min(mergeLength, listLength)
+		insertAt = 0
 		for rightStartAt < listLength {
-			nextLeftAt := leftStartAt
-			nextRightAt := rightStartAt
-			insertAt := nextLeftAt
+			nextLeftAt = leftStartAt
+			nextRightAt = rightStartAt
 
+			// merge items
 			for nextLeftAt < rightStartAt && nextRightAt < rightEndedAt {
-				leftItem := readFrom[nextLeftAt]
-				rightItem := readFrom[nextRightAt]
-
-				if leftItem < rightItem {
-					writeTo[insertAt] = leftItem
+				if readFrom[nextLeftAt] < readFrom[nextRightAt] {
+					writeTo[insertAt] = readFrom[nextLeftAt]
 
 					nextLeftAt++
 				} else {
-					writeTo[insertAt] = rightItem
+					writeTo[insertAt] = readFrom[nextRightAt]
 
 					nextRightAt++
 				}

@@ -99,7 +99,7 @@ func BenchmarkSortTinyLength(b *testing.B, sortFunc SortFunc[int]) {
 // value range: large
 // sorted: false
 func BenchmarkSortSmallLength(b *testing.B, sortFunc SortFunc[int]) {
-	benchmarkSortNInPlace(b, sortFunc, 100, math.MaxInt, false)
+	benchmarkSortNInPlace(b, sortFunc, 1_000, math.MaxInt, false)
 }
 
 // Benchmark:
@@ -107,7 +107,7 @@ func BenchmarkSortSmallLength(b *testing.B, sortFunc SortFunc[int]) {
 // value range: large
 // sorted: false
 func BenchmarkSortMediumLength(b *testing.B, sortFunc SortFunc[int]) {
-	benchmarkSortNInPlace(b, sortFunc, 1_000, math.MaxInt, false)
+	benchmarkSortNInPlace(b, sortFunc, 10_000, math.MaxInt, false)
 }
 
 // Benchmark:
@@ -115,7 +115,7 @@ func BenchmarkSortMediumLength(b *testing.B, sortFunc SortFunc[int]) {
 // value range: large
 // sorted: false
 func BenchmarkSortLargeLength(b *testing.B, sortFunc SortFunc[int]) {
-	benchmarkSortNInPlace(b, sortFunc, 10_000, math.MaxInt, false)
+	benchmarkSortNInPlace(b, sortFunc, 100_000, math.MaxInt, false)
 }
 
 // Benchmark:
@@ -123,7 +123,7 @@ func BenchmarkSortLargeLength(b *testing.B, sortFunc SortFunc[int]) {
 // value range: medium
 // sorted: TRUE
 func BenchmarkSortAlreadySorted(b *testing.B, sortFunc SortFunc[int]) {
-	benchmarkSortNInPlace(b, sortFunc, 1_000, math.MaxInt, true)
+	benchmarkSortNInPlace(b, sortFunc, 10_000, math.MaxInt, true)
 }
 
 // Benchmark:
@@ -131,7 +131,7 @@ func BenchmarkSortAlreadySorted(b *testing.B, sortFunc SortFunc[int]) {
 // value range: SMALL
 // sorted: false
 func BenchmarkSmallValueRange(b *testing.B, sortFunc SortFunc[int]) {
-	benchmarkSortNInPlace(b, sortFunc, 1_000, 10, false)
+	benchmarkSortNInPlace(b, sortFunc, 10_000, 10, false)
 }
 
 // Benchmark:
@@ -139,5 +139,5 @@ func BenchmarkSmallValueRange(b *testing.B, sortFunc SortFunc[int]) {
 // value range: LARGE
 // sorted: false
 func BenchmarkLargeValueRange(b *testing.B, sortFunc SortFunc[int]) {
-	benchmarkSortNInPlace(b, sortFunc, 1_000, math.MaxInt, false)
+	benchmarkSortNInPlace(b, sortFunc, 10_000, math.MaxInt, false)
 }

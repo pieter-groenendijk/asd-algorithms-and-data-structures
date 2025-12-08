@@ -61,6 +61,106 @@ control and must reallocate a whole different array and copy the values upong gr
     keuze (NIET parallel merge sort) en maakt een vergelijking tussen de implementaties.
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
+```go
+func Sort[T cmp.Ordered](list []T) []T {
+	listLength := len(list)
+
+	readFrom := list
+	writeTo := make([]T, listLength)
+
+	if listLength % 2 != 0 { // uneven
+		writeTo[listLength - 1] = readFrom[listLength - 1]
+	}
+
+	var leftStartAt int
+	var rightStartAt int
+	var rightEndedAt int 
+
+	var nextLeftAt int
+	var nextRightAt int
+	var insertAt int
+
+	partLength := 1
+	mergeLength := 2
+	for partLength < listLength {
+		leftStartAt = 0
+		rightStartAt = leftStartAt + partLength
+		rightEndedAt = min(mergeLength, listLength)
+		insertAt = 0
+		for rightStartAt < listLength {
+			nextLeftAt = leftStartAt
+			nextRightAt = rightStartAt
+
+			// merge items
+			for nextLeftAt < rightStartAt && nextRightAt < rightEndedAt {
+				if readFrom[nextLeftAt] < readFrom[nextRightAt] {
+					writeTo[insertAt] = readFrom[nextLeftAt]
+
+					nextLeftAt++
+				} else {
+					writeTo[insertAt] = readFrom[nextRightAt]
+
+					nextRightAt++
+				}
+
+				insertAt++
+			}
+			// insert leftover `left` items if there are any
+			for ; nextLeftAt < rightStartAt; nextLeftAt++ {
+				writeTo[insertAt] = readFrom[nextLeftAt]
+				insertAt++
+			}
+			// insert leftover `right` items if there are any
+			for ; nextRightAt < rightEndedAt; nextRightAt++ {
+				writeTo[insertAt] = readFrom[nextRightAt]
+				insertAt++
+			}
+
+			// prepare for next iteration
+			leftStartAt += mergeLength
+			rightStartAt += mergeLength
+			rightEndedAt = min(rightEndedAt+mergeLength, listLength)
+		}
+
+		// prepare for next merge iteration
+		partLength += partLength
+		mergeLength += mergeLength
+
+		readFrom, writeTo = writeTo, readFrom
+	}
+
+	return readFrom
+}
+```
+### Description
+Worst case time complexity: `O(n log n)`
+Worst case space complexity: `O(n)`
+
+It starts with the smallest unit of partition that is meaningful and sorted by definition: a one item partition.
+
+Then, every iteration the whole array's partitions are _merged_ into a 
+larger partitions, this is done until the whole array is sorted.
+A divide-and-conquer algorithm. 
+
+### Noteworthy optimizations
+Two arrays are maintained: one for reading the state before the current iteration, and one to write new state to while in
+this iteration. These are then swapped after an iteration has completed. Here, we initialize the `readFrom` as the given list,
+and the `writeTo` as an new list. Lessening time spent on memory management and copying operations.
+
+The iterative approach, opposed to resursive, also lessens time and space usage, since there is no overhead done for this
+algorithm on the call stack.
+
+### Potential improvements
+Each merge iteration uses each item exactly once, and if the length of the list is larger than the CPU cache capacity, then
+these are removed from it before they are used again in the next iteration. This generally leads to dreadful locality. Temporal 
+locality may be improved by only merging subarrays that fit into the cache, and then merging the whole array from that point on.
+Then a memory-optimized heap can be used to increase spatial locality for the last phase of mentioned improvement. [@CachePerfSorting]
+
+Merging has significant overhead, which makes it worse for smaller partitions. By falling back to 
+another sorting algorithm that can better handle this workload. Perhaps lowering time and space utilization.
+
+Merging subarrays in reversed order would allow simpler boundary checking, perhaps lowering time and space
+utilization.
 
 ## Insertion sort
 <!--
