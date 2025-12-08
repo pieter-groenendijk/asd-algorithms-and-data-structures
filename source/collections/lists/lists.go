@@ -1,14 +1,14 @@
 package lists
 
-import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
+import (
+	"iter"
+)
 
 // A sequence of values
 type List[TValue any] interface {
-	collections.Collection
-
 	// Returns the element at the specified position in this list.
 	Get(index int) (TValue, error)
-	// Returns true if this list contains the specified element.
+	IndexOf(value TValue) (int, error)
 
 	// Replaces the element at the specified position in this list with the specified element. 
 	SetAt(value TValue, index int) error
@@ -22,5 +22,9 @@ type List[TValue any] interface {
 	// Removes the first occurrence of the specified element from this list, if it is present.
 	Remove(value TValue)
 	// Removes the element at the specified position in this list.
-	// RemoveAt(index uint)
+	RemoveAt(index int) error
+
+	Size() int
+
+	All() iter.Seq[TValue]
 }

@@ -1,10 +1,6 @@
 package arraylist
 
-import (
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
-)
-
-func (list *ArrayList[TValue]) maybeGrowCapacity() {
+func (list *ArrayList[TValue]) maybeGrowCapacity(insertOffset int) {
 	sizeNow := list.size
 	if sizeNow < len(list.space) {
 		return
@@ -12,7 +8,7 @@ func (list *ArrayList[TValue]) maybeGrowCapacity() {
 
 	oldList := list.space
 	newList := make([]TValue, getCapacityForSize(sizeNow)) 
-	copy(newList, oldList)
+	copy(newList[insertOffset:], oldList)
 	list.space = newList
 }
 
@@ -20,14 +16,21 @@ func getCapacityForSize(size int) int {
 	return size * 3 / 2 + 3
 }
 
-func (list *ArrayList[TValue]) indexOf(value TValue) (int, error) {
-	size := list.size
-	space := list.space
-	for i := 0; i < size; i++ {
-		if space[i] == value {
-			return i, nil
-		}
+
+func (list *ArrayList[TValue]) removeAt(index int) {
+	oldList := list.space
+	newSize := list.size - 1
+	newCapacity := getCapacityForSize(newSize)
+	newList := make([]TValue, newCapacity) 
+
+	i := 0
+	for ; i < index; i++ {
+		newList[i] = oldList[i]
+	}
+	for ; i < newSize; i++ {
+		newList[i] = oldList[i + 1]
 	}
 
-	return 0, collections.ErrNotFound
+	list.space = newList
+	list.size = newSize
 }
