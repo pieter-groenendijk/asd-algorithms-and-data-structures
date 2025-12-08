@@ -8,7 +8,6 @@ import (
 type List[TValue any] interface {
 	// Returns the element at the specified position in this list.
 	Get(index int) (TValue, error)
-	IndexOf(value TValue) (int, error)
 
 	// Replaces the element at the specified position in this list with the specified element. 
 	SetAt(value TValue, index int) error
