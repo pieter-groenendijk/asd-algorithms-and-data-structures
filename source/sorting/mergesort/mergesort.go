@@ -44,6 +44,7 @@ func Sort[T cmp.Ordered](list []T) []T {
 
 		// We mergesort every UNEVEN pair RIGHT-TO-LEFT
 		rightAt = pyramidSize - 1
+		leftAt = rightAt - pyramidSize + 1
 		writeAt = rightAt
 		for rightAt < listLength {
 			// start merging this pair
