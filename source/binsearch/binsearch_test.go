@@ -125,3 +125,21 @@ func TestSearch(t *testing.T) {
 		})
 	}
 }
+
+func BenchSearch(b *testing.B) {
+	b.Run("smallLength", func(b *testing.B) {
+		
+	})
+
+	b.Run("mediumLength", func(b *testing.B) {
+
+	})
+
+	b.Run("largeLength", func(b *testing.B) {
+	
+	})
+
+	b.Run("extremeLength", func(b *testing.B) {
+
+	})
+}

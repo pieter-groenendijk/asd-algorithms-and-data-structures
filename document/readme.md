@@ -197,6 +197,70 @@ utilization.
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
 
+```go
+func Search[TValue cmp.Ordered](values []TValue, value TValue) (int, error) {
+	rightAt := len(values) - 1
+	if rightAt < 0 {
+		return -1, collections.ErrNotFound
+	}
+
+	leftAt := 0
+	var middleAt int
+	for leftAt != rightAt {
+		middleAt = (rightAt - leftAt) / 2 + leftAt
+		if value > values[middleAt] {
+			leftAt = middleAt + 1
+		} else { // value <= values[middleAt]
+			// we assume value < values[middleAt], to prevent an repeated check, and
+			// instead rely on our loop boundary condition.
+			rightAt = middleAt
+		}
+	}
+
+	if value == values[leftAt] {
+		return leftAt, nil
+	}
+
+	return -1, collections.ErrNotFound
+}
+```
+
+### Description
+Binary search utilizes the ordered nature of given `values` to 
+make educated guesses of where the given `value` might be. Binary research makes 
+educated guesses every iteration, and checks it's relativity to the given `value`,
+to determine the next educated guess. Every iteration roughly halves the search area. 
+
+In this implementation, opposed to more traditional approaches, this _halving_ 
+goes on until there is only one value left. 
+
+This approach is taken since the actual repeating binary search, i.e. the loop, actually
+uses a binary check, a `if`-`else`. Many implementations check the value at the guess `middleAt`
+to be larger, smaller and equal. This way an early return may be used for equality. Yet, the 
+cost is an additional conditional. The chance for a guess to be accurate is with unbounded 
+length of `values` generally extremely low. Thus, this implementation just assumes for every
+iteration that if `value <= values[middleAt]`, then we assume `value < values[middleAt]`, since
+that is very likely to be true. Yet, since equality is theoretically possible we can't assign our
+next `rightAt` to be `middleAt - 1` to prevent removing that possibility from our search area.
+
+Then our search naturally converges, where `leftAt == rightAt`, and one value is left,
+which is checked for equality to produce the desired function return types.
+
+### Complexity
+The time complexity stays the same for every non-zero input since it always keeps halving 
+until there is one value left: `O(logN)`, where `N == len(values)`
+
+### Execution time
+
+### Potential improvements
+The additional error return value, although consistent with other styles, it can be optimized
+to use a `bool` instead. Go wraps interface types like `error`, thus adding interface allocation
+overhead. Perhaps even easier, but arguably less safe, a int value of `-1` may be used to 
+indicate that the value is not found.
+
+The arithmatic calculation of `middleAt` could perhaps be replaced with bitwise operations, specifically
+using a bitwise right shift to perform the halving division.
+
 \newpage
 # Graphs
 ## [Graph implementation]
