@@ -85,6 +85,22 @@ func AssertPanics(test *testing.T, expectedToPanic func()) {
 	expectedToPanic()
 }
 
+func AssertIn[T any](t *testing.T, expectedIn []T, actual T) {
+	t.Helper()
+
+	gotExpected := false
+	for _, expected := range expectedIn {
+		if reflect.DeepEqual(expected, actual) {
+			gotExpected = true
+			break
+		}
+	}
+
+	if !gotExpected {
+		t.Errorf("Expected in %+v, but got %+v", expectedIn, actual)
+	}
+}
+
 func AssertEmpty(test *testing.T, actual any) {
 	test.Helper()
 
