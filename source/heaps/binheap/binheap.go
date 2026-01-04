@@ -37,11 +37,6 @@ func (h *BinHeap[TOrder, TValue]) Push(order TOrder, value TValue) {
 	}
 }
 
-// for better CPU Cache performance, perhaps separate values from priorities.
-// Priorities are worked on most of the time, while the value is generally
-// only acted upon about once per function.
-// By separating more priorities can be put into cache (spatial locality),
-// while the once accessed data can remain out of cache, without any big consequence.
 
 func (h *BinHeap[TOrder, TValue]) Pop() (TValue, bool) {
 	length := len(h.nodes)

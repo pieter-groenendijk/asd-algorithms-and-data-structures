@@ -53,6 +53,157 @@ control and must reallocate a whole different array and copy the values upong gr
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
 
+```go
+// Alias of a binary heap
+type PriorityQueue[TPriority cmp.Ordered, TValue any] = binheap.BinHeap[TPriority, TValue]
+
+func New[TPriority cmp.Ordered, TValue any](capacity int) *PriorityQueue[TPriority, TValue] {
+	return binheap.New[TPriority, TValue](capacity)
+}
+```
+
+```go
+type BinHeap[TOrder cmp.Ordered, TValue any] struct {
+	nodes []Node[TOrder, TValue]
+}
+
+func New[TOrder cmp.Ordered, TValue any](capacity int) *BinHeap[TOrder, TValue] {
+	return &BinHeap[TOrder, TValue]{
+		nodes: make([]Node[TOrder, TValue], 0, capacity),
+	}
+}
+
+func (h *BinHeap[TOrder, TValue]) Push(order TOrder, value TValue) {
+	h.nodes = append(h.nodes, *NewNode(order, value))
+
+	length := len(h.nodes)
+	if length == 1 {
+		return
+	}
+
+	// While "heap order" incorrect, swap inserted with parent
+	insertedAt := length - 1
+	nodes := h.nodes
+	for {
+		parentAt := (insertedAt - 1) / 2 // `>> 1` is the same as `/ 2`, but more performant
+		if parentAt < 0 {
+			break
+		}
+
+		if order <= nodes[parentAt].order {
+			break
+		}
+
+		nodes[parentAt], nodes[insertedAt] = nodes[insertedAt], nodes[parentAt]
+	}
+}
+
+// for better CPU Cache performance, perhaps separate values from priorities.
+// Priorities are worked on most of the time, while the value is generally
+// only acted upon about once per function.
+// By separating more priorities can be put into cache (spatial locality),
+// while the once accessed data can remain out of cache, without any big consequence.
+
+func (h *BinHeap[TOrder, TValue]) Pop() (TValue, bool) {
+	length := len(h.nodes)
+	if length == 0 {
+		var value TValue
+		return value, false
+	}
+
+	// Extract first while we still can
+	first := h.nodes[0]
+
+	// Move "last" to "first", and remove "last"
+	h.nodes[0] = h.nodes[length-1]
+	h.nodes = h.nodes[:length-1]
+	length--
+
+	// While "heap order" incorrect -> swap largest child with inserted
+	nodes := h.nodes
+	insertedAt := 0
+	for {
+		leftChildAt := insertedAt*2 + 1
+		rightChildAt := insertedAt*2 + 2
+		largestAt := insertedAt
+
+		if leftChildAt < length && nodes[leftChildAt].order > nodes[largestAt].order {
+			largestAt = leftChildAt
+		}
+		if rightChildAt < length && nodes[rightChildAt].order > nodes[largestAt].order {
+			largestAt = rightChildAt
+		}
+
+		if largestAt == insertedAt { // We didn't find a larger child
+			break
+		}
+
+		nodes[largestAt], nodes[insertedAt] = nodes[insertedAt], nodes[largestAt]
+		insertedAt = largestAt
+	}
+
+	return first.value, true
+}
+```
+
+```go
+type Node[TPriority cmp.Ordered, TValue any] struct {
+	order TPriority
+	value TValue
+}
+
+func NewNode[TPriority cmp.Ordered, TValue any](priority TPriority, value TValue) *Node[TPriority, TValue] {
+	return &Node[TPriority, TValue]{
+		order: priority,
+		value: value,
+	}
+}
+```
+
+### Description
+A priority queue is implemented using a binary heap. The binary heap, although representing a binary tree, is stored
+as an array, or dynamic array in this case^[A slice is the go variant]. It allows optimized priority queue
+operations due to the maintenance of the shape and heap properties:
+
+Shape: Every level is fully filled except the deepest one. By ensuring this the algorithm may have better 
+existential knowledge, thus reducing checks.
+
+Heap: In our case, every child node is lesser or equal to it's parent. The algorithm knows where the 
+_largest_ node remains at, namely the root node. The heap property, combined with that the root node 
+is a parent but not a child, ensures this will always remain constant. The rest of the ordering mainly
+makes it easier to maintain the property itself, i.e. less comparisons for insertions and deletions.
+
+### Performance
+
+Operation | Best | Worst |
+| ------ | --- | --- |
+| Push | `O(1)` | `O(log n)` |
+| Pop | `O(1)` | `O(log n)` |
+
+#### Push
+Best case occurs when the node added to the _bottom_ contains a smaller priority than it's direct parent. 
+Thus not requiring no maintenance of the heap property.
+
+Worst case occurs when the node added to the _bottom_ contains the largest priority in the collection. Thus
+requiring maintenance of the heap property through all layers.
+
+#### Pop
+Best case occurs when the root node is swapped with the _last_ node containing the largest value in the
+new collection. Thus requiring no maintenance of the heap property.
+
+Worst case occurs when the root node is swapped with the _last_ node containing the smallest value in the 
+new collection. Thus requiring maintenance of the heap property through all layers.
+
+### Potential optimizations
+The node structures should be implicit, not explicit; priorities should be separated from values.
+Associated values are only important for the final _setting_ or _getting_, all other logic operates
+on priorities. The algorithm can fit more _hot_ data in the CPU cache by minimizing on putting in
+_cold_ data. Thus improving operations for a larger `n`.
+
+A node should have more than two children. The spatial locality can be made more relevant by increasing the amount of children a parent has, since 
+it leads to a more continous memory block. Downwards maintenance of the heap property ensures a comparison
+per child. An iteration's comparisons may have more cache hits due to the more relevant spatial locality.
+
 \newpage
 # Sorting
 ## Merge sort
