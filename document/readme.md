@@ -173,6 +173,8 @@ _largest_ node remains at, namely the root node. The heap property, combined wit
 is a parent but not a child, ensures this will always remain constant. The rest of the ordering mainly
 makes it easier to maintain the property itself, i.e. less comparisons for insertions and deletions.
 
+![Binary heap process](./binary-heap-process.excalidraw.svg)
+
 ### Performance
 
 Operation | Best | Worst |
