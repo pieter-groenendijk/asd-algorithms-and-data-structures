@@ -1,16 +1,21 @@
 package adlist
 
-import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/graphs"
+import (
+)
 
 type AdjacencyList struct {
-	edges map[graphs.Id][]graphs.Id // map[fromNodeId][]toNodeId
-	lastUsedId graphs.Id
+	holesAt []int // contains where holes exist in `vertexToEdges`
+	toVertices [][]int // [fromVertexId] -> []toVertexId, answers: What do I point to?
+	fromVertices [][]int // [toVertexId] -> []fromVertexId, answers: What edges point to me?
 }
 
-func New(capacity int) *AdjacencyList {
+// initVertCap: the initial capacity of vertices
+// 
+// initEdgeCap: the initial capacity of edges per vertices
+func New(initVertCap int, initEdgeCap int) *AdjacencyList {
 	return &AdjacencyList{
-		edges: make(map[graphs.Id][]graphs.Id, capacity),
-		lastUsedId: -1,
+		holesAt: make([]int, 8),
+		toVertices: make([][]int, initVertCap),
+		fromVertices: make([][]int, initVertCap * initEdgeCap),
 	}
 }
-

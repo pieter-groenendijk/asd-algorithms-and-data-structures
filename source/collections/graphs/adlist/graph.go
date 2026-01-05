@@ -1,28 +1,24 @@
 package adlist
 
 import (
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/graphs"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/bag"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/swapback"
 )
 
-/*
-type Graph interface {
-	haveEdge(fromVertexId Id, toVertexId Id) bool
-	addVertex() Id
-	removeVertex(id Id)
-	addEdge(fromVertexId Id, toVertexId Id) 
-	removeEdge(fromVertexId Id, toVertexId Id)
+func (g *AdjacencyList) HaveVertex(vertexId int) bool {
+	return vertexId < len(g.toVertices)
 }
-*/
 
-func (g *AdjacencyList) HaveEdge(fromVertexId graphs.Id, toVertexId graphs.Id) bool {
-	edges := g.edges[fromVertexId]
-	if edges == nil {
+func (g *AdjacencyList) HaveEdge(fromVertexId int, toVertexId int) bool {
+	edgeExists := toVertexId < len(g.fromVertices)
+	if !edgeExists {
 		return false
 	}
 
-	length := len(edges)
-	for i := 0; i < length; i++ {
-		if edges[i] == toVertexId {
+	edges := g.fromVertices[toVertexId]
+	edgesLen := len(edges)
+	for i := 0; i < edgesLen; i++ {
+		if edges[i] == fromVertexId {
 			return true
 		}
 	}
@@ -30,34 +26,38 @@ func (g *AdjacencyList) HaveEdge(fromVertexId graphs.Id, toVertexId graphs.Id) b
 	return false
 }
 
-func (g *AdjacencyList) GetVertices(id Id) map[Id][]Id {
-	return g.edges
+func (g *AdjacencyList) AddVertex(edgeCapacity int) int {
+	holesAt, holeAt, holeFound := swapback.Pop(g.holesAt)
+	g.holesAt = holesAt
+	if holeFound {
+		g.toVertices[holeAt] = make([]int, edgeCapacity)
+
+		return holeAt
+	} else {
+		g.toVertices = append(g.toVertices, make([]int, edgeCapacity))
+
+		return len(g.toVertices) - 1
+	}
 }
 
-func (g *AdjacencyList) AddVertex(edgeCapacity int) graphs.Id {
-	id := g.newId()
+func (g *AdjacencyList) RemoveVertex(vertexId int) {
+	fromVertices := g.fromVertices[vertexId] // 
+	
 
-	g.edges[id] = make([]graphs.Id, edgeCapacity)
 
-	return id
 }
 
-func (g *AdjacencyList) RemoveVertex(vertexId graphs.Id) {
-	delete(g.edges, vertexId)
+// May return nil slice if the vertex does not exist
+func (g *AdjacencyList) GetEdges(vertexId int) []int {
+	return g.toVertices[vertexId]
 }
 
-// May return nil if the vertex does not exist
-func (g *AdjacencyList) GetEdges(vertexId graphs.Id) []graphs.Id {
-	return g.edges[vertexId]
+func (g *AdjacencyList) AddEdge(fromVertexId int, toVertexId int) {
+	g.toVertices[fromVertexId] = append(g.toVertices[fromVertexId], toVertexId)
 }
 
-// addEdge duplicate edges are not prevented
-func (g *AdjacencyList) AddEdge(fromVertexId graphs.Id, toVertexId graphs.Id) {
-	g.edges[fromVertexId] = append(g.edges[fromVertexId], toVertexId)
-}
-
-func (g *AdjacencyList) RemoveEdge(fromVertexId graphs.Id, toVertexId graphs.Id) {
-	edges := g.edges[fromVertexId]
+func (g *AdjacencyList) RemoveEdge(fromVertexId int, toVertexId int) {
+	edges := g.toVertices[fromVertexId]
 	if edges == nil {
 		return
 	}
@@ -65,9 +65,8 @@ func (g *AdjacencyList) RemoveEdge(fromVertexId graphs.Id, toVertexId graphs.Id)
 	length := len(edges)
 	for i := 0; i < length; i++ {
 		if edges[i] == toVertexId {
-			edges[i] = edges[length - 1] // order does not matter, swap with last vertex id, instead of splicing. `O(1) instead of O(n)`
-			g.edges[fromVertexId] = edges[:length - 1] // then we change our view, doing as it never existed
-			// TODO: Update slice for bigger discrepencies to avoid bigger memory leaks
+			g.toVertices[fromVertexId] = swapback.Remove(g.toVertices[fromVertexId], i)
+			break
 		}
 	}
 }
