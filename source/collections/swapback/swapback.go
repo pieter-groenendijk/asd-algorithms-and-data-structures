@@ -1,25 +1,16 @@
 package swapback
 
-type SwapbackArray[T any] struct {
-	values []T
-}
-
-func (a *SwapbackArray[T]) Get(index int) T {
-	return a.values[index]
-}
-
-func (a *SwapbackArray[T]) Set(index int, value T) {
-	a.values[index] = value
-}
-
-func (a *SwapbackArray[T]) Remove(index int) {
-	newLen := len(a.values) - 1
-	if newLen == 0 {
-		return
+func Remove[T any](b []T, index int) []T {
+	newLen := len(b) - 1
+	if newLen == -1 {
+		return b
 	}
 
-	a.values[index] = a.values[newLen]
+	b[index] = b[newLen]
 	var zeroValue T
-	a.values[newLen] = zeroValue // May help relieve some memory
-	a.values = a.values[:newLen]
+	b[newLen] = zeroValue // May help relieve some memory
+
+	// TODO: In some cases reallocate to smaller size
+
+	return b[:newLen]
 }
