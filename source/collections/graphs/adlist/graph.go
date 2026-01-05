@@ -1,68 +1,73 @@
 package adlist
 
 import (
-	"fmt"
-
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/graphs"
 )
 
-func (g *AdjacencyList[TVertex, TEdge]) GetVertex(id graphs.Id) (TVertex, error) {
-	vertex, hasVertex := g.vertices[id]
-	if !hasVertex {
-		return vertex, fmt.Errorf("failed to get vertex: %w", collections.ErrNotFound)
+/*
+type Graph interface {
+	haveEdge(fromVertexId Id, toVertexId Id) bool
+	addVertex() Id
+	removeVertex(id Id)
+	addEdge(fromVertexId Id, toVertexId Id) 
+	removeEdge(fromVertexId Id, toVertexId Id)
+}
+*/
+
+func (g *AdjacencyList) HaveEdge(fromVertexId graphs.Id, toVertexId graphs.Id) bool {
+	edges := g.edges[fromVertexId]
+	if edges == nil {
+		return false
 	}
 
-	return vertex, nil
+	length := len(edges)
+	for i := 0; i < length; i++ {
+		if edges[i] == toVertexId {
+			return true
+		}
+	}
+
+	return false
 }
 
-func (g *AdjacencyList[TVertex, TEdge]) AddVertex(vertex TVertex) graphs.Id {
+func (g *AdjacencyList) GetVertices(id Id) map[Id][]Id {
+	return g.edges
+}
+
+func (g *AdjacencyList) AddVertex(edgeCapacity int) graphs.Id {
 	id := g.newId()
 
-	g.vertices[id] = vertex
-	
+	g.edges[id] = make([]graphs.Id, edgeCapacity)
+
 	return id
 }
 
-func (g *AdjacencyList[TVertex, TEdge]) RemoveVertex(id graphs.Id) {
-	delete(g.vertices, id)
+func (g *AdjacencyList) RemoveVertex(vertexId graphs.Id) {
+	delete(g.edges, vertexId)
 }
 
-func (g *AdjacencyList[TVertex, TEdge]) GetEdge(fromVertex graphs.Id, edgeId graphs.Id) (TEdge, error) {
-	vertex, err := g.GetVertex(fromVertex)
-	if err != nil {
-		var edge TEdge
-		return edge, fmt.Errorf("failed to get edge: %w", err)
-	}
-
-	edge, err := vertex.GetEdge(edgeId)
-	if err != nil {
-		return edge, err
-	}
-
-	return edge, nil
+// May return nil if the vertex does not exist
+func (g *AdjacencyList) GetEdges(vertexId graphs.Id) []graphs.Id {
+	return g.edges[vertexId]
 }
 
-func (g *AdjacencyList[TVertex, TEdge]) AddEdge(fromVertexId graphs.Id, edge TEdge) (graphs.Id, error) {
-	vertex, err := g.GetVertex(fromVertexId)
-	if err != nil {
-		return -1, fmt.Errorf("failed to add edge: %w", err)
-	}
-
-	id := g.newId()
-	vertex.AddEdge(id, edge)
-
-	return id, nil
+// addEdge duplicate edges are not prevented
+func (g *AdjacencyList) AddEdge(fromVertexId graphs.Id, toVertexId graphs.Id) {
+	g.edges[fromVertexId] = append(g.edges[fromVertexId], toVertexId)
 }
 
-func (g *AdjacencyList[TVertex, TEdge]) RemoveEdge(fromVertexId, id graphs.Id) error {
-	vertex, err := g.GetVertex(fromVertexId)
-	if err != nil {
-		return fmt.Errorf("failed to remove edge: %w", err)
+func (g *AdjacencyList) RemoveEdge(fromVertexId graphs.Id, toVertexId graphs.Id) {
+	edges := g.edges[fromVertexId]
+	if edges == nil {
+		return
 	}
 
-	vertex.RemoveEdge(fromVertexId)
-
-	return nil
+	length := len(edges)
+	for i := 0; i < length; i++ {
+		if edges[i] == toVertexId {
+			edges[i] = edges[length - 1] // order does not matter, swap with last vertex id, instead of splicing. `O(1) instead of O(n)`
+			g.edges[fromVertexId] = edges[:length - 1] // then we change our view, doing as it never existed
+			// TODO: Update slice for bigger discrepencies to avoid bigger memory leaks
+		}
+	}
 }
-
