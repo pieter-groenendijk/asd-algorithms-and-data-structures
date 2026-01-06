@@ -1,7 +1,13 @@
 package linkedlistv2
 
-func (l *LinkedList[TValue]) Get(index int) TValue {
-	return l.GetNode(index).value
+func (l *LinkedList[TValue]) Get(index int) (TValue, bool) {
+	node, exists := l.GetNodeAt(index)
+	if !exists {
+		var zeroValue TValue
+		return zeroValue, exists
+	}
+
+	return node.value, exists
 }
 
 func (l *LinkedList[TValue]) Append(value TValue) {
@@ -13,8 +19,8 @@ func (l *LinkedList[TValue]) Prepend(value TValue) {
 }
 
 func (l *LinkedList[TValue]) Remove(value TValue) {
-	beforeNode, err := l.GetNodeBefore(value)
-	if err != nil {
+	beforeNode, exists := l.GetNodeBefore(value)
+	if !exists {
 		return
 	}
 

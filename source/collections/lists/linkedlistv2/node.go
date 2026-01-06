@@ -1,7 +1,5 @@
 package linkedlistv2
 
-import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
-
 type Node[TValue any] struct {
 	value TValue
 	next  *Node[TValue]
@@ -14,28 +12,36 @@ func NewNode[TValue any](value TValue) *Node[TValue] {
 	}
 }
 
-func (l *LinkedList[TValue]) GetNodeBefore(value TValue) (*Node[TValue], error) {
+func (l *LinkedList[TValue]) GetNodeBefore(value TValue) (*Node[TValue], bool) {
 	currNode := l.head
 	afterNode := currNode.next
 	for afterNode != nil {
 		if l.equalsFunc(value, afterNode.value) {
-			return currNode, nil
+			return currNode, true
 		}
 
 		currNode = afterNode
 		afterNode = afterNode.next
 	}
 
-	return nil, collections.ErrNotFound
+	return nil, false
 }
 
-func (l *LinkedList[TValue]) GetNode(index int) *Node[TValue] {
+func (l *LinkedList[TValue]) GetNodeBeforeAt(index int) (*Node[TValue], bool) {
+	return l.GetNodeAt(index - 1)
+}
+
+func (l *LinkedList[TValue]) GetNodeAt(index int) (*Node[TValue], bool) {
 	currNode := l.head.next
 	for i := 0; i < index; i++ {
 		currNode = currNode.next
 	}
 
-	return currNode
+	if currNode == nil {
+		return nil, false
+	}
+
+	return currNode, true
 }
 
 func (l *LinkedList[TValue]) RemoveAfter(beforeNode *Node[TValue]) {
