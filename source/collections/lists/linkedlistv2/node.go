@@ -28,10 +28,27 @@ func (l *LinkedList[TValue]) GetNodeBefore(value TValue) (*Node[TValue], bool) {
 }
 
 func (l *LinkedList[TValue]) GetNodeBeforeAt(index int) (*Node[TValue], bool) {
-	return l.GetNodeAt(index - 1)
+	if index < 0 || index >= l.length {
+		return nil, false
+	}
+
+	currNode := l.head
+	for i := 0; i < index; i++ {
+		currNode = currNode.next
+	}
+
+	if currNode == nil {
+		return nil, false
+	}
+
+	return currNode, true
 }
 
 func (l *LinkedList[TValue]) GetNodeAt(index int) (*Node[TValue], bool) {
+	if index < 0 || index >= l.length {
+		return nil, false
+	}
+
 	currNode := l.head.next
 	for i := 0; i < index; i++ {
 		currNode = currNode.next
@@ -47,11 +64,16 @@ func (l *LinkedList[TValue]) GetNodeAt(index int) (*Node[TValue], bool) {
 func (l *LinkedList[TValue]) RemoveAfter(beforeNode *Node[TValue]) {
 	afterNode := beforeNode.next
 	if afterNode == nil {
-		l.tail = afterNode
 		return
 	}
 
 	beforeNode.next = afterNode.next
+
+	if beforeNode.next == nil {
+		l.tail = beforeNode
+	}
+
+	l.length--
 }
 
 func (l *LinkedList[TValue]) InsertAfter(beforeNode, newNode *Node[TValue]) {
@@ -62,4 +84,6 @@ func (l *LinkedList[TValue]) InsertAfter(beforeNode, newNode *Node[TValue]) {
 
 	beforeNode.next = newNode
 	newNode.next = afterNode
+
+	l.length++
 }
