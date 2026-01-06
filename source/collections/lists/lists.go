@@ -7,13 +7,13 @@ import (
 // A sequence of values
 type List[TValue any] interface {
 	// Returns the element at the specified position in this list.
-	Get(index int) (TValue, error)
+	Get(index int) TValue
 
-	// Replaces the element at the specified position in this list with the specified element. 
+	// Replaces the element at the specified position in this list with the specified element.
 	SetAt(value TValue, index int) error
-	// Adds the specified element to the beginning of this list. 
+	// Adds the specified element to the beginning of this list.
 	Prepend(value TValue)
-	// Adds the specified element to the end of this list. 
+	// Adds the specified element to the end of this list.
 	Append(value TValue)
 	// Inserts the specified element at the specified position in this list.
 	// InsertAt(value TValue, index uint)

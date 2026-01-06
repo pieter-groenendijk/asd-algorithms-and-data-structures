@@ -8,26 +8,26 @@ import (
 
 func TestNew(t *testing.T) {
 	type testCase struct {
-		name string
+		name            string
 		initialCapacity int
-		expected *ArrayList[int]
+		expected        *ArrayList[int]
 	}
 
 	cases := []testCase{
 		{
-			"initialCapacity of 0", 
-			0, 
+			"initialCapacity of 0",
+			0,
 			&ArrayList[int]{
-				space: []int{},
-				size: 0,
+				space:  []int{},
+				length: 0,
 			},
 		},
 		{
 			"initialCapacity of 5",
 			5,
 			&ArrayList[int]{
-				space: []int{0,0,0,0,0},
-				size: 0,
+				space:  []int{0, 0, 0, 0, 0},
+				length: 0,
 			},
 		},
 	}
