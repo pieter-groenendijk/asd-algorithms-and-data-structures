@@ -18,6 +18,10 @@ header-includes:
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
 
+```go
+
+```
+
 - In golang, the length of an array is part of it's type, meaning the length must be a constant. Only slices can
 be created with a length specified at runtime, which already is a dynamic array...
 

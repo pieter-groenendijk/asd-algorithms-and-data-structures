@@ -1,35 +1,23 @@
 package arraylist
 
-func (list *ArrayList[TValue]) maybeGrowCapacity(insertOffset int) {
-	sizeNow := list.length
-	if sizeNow < len(list.space) {
-		return
-	}
-
-	oldList := list.space
-	newList := make([]TValue, getCapacityForSize(sizeNow))
-	copy(newList[insertOffset:], oldList)
-	list.space = newList
+func (list *ArrayList[TValue]) needToGrow(expectedLength int) bool {
+	return expectedLength > len(list.space)
 }
 
-func getCapacityForSize(size int) int {
-	return size*3/2 + 3
+func (list *ArrayList[TValue]) grow(expectedLength int) []TValue {
+	return make([]TValue, expectedLength*3/2+3)
 }
 
+// TODO: Optimize space efficiency: Resize when lots is unused
 func (list *ArrayList[TValue]) removeAt(index int) {
-	oldList := list.space
-	newSize := list.length - 1
-	newCapacity := getCapacityForSize(newSize)
-	newList := make([]TValue, newCapacity)
-
+	newLength := list.length - 1
 	i := 0
 	for ; i < index; i++ {
-		newList[i] = oldList[i]
+		list.space[i] = list.space[i]
 	}
-	for ; i < newSize; i++ {
-		newList[i] = oldList[i+1]
+	for ; i < newLength; i++ {
+		list.space[i] = list.space[i+1]
 	}
 
-	list.space = newList
-	list.length = newSize
+	list.length = newLength
 }

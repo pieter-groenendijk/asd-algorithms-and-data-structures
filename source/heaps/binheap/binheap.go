@@ -37,7 +37,6 @@ func (h *BinHeap[TOrder, TValue]) Push(order TOrder, value TValue) {
 	}
 }
 
-
 func (h *BinHeap[TOrder, TValue]) Pop() (TValue, bool) {
 	length := len(h.nodes)
 	if length == 0 {

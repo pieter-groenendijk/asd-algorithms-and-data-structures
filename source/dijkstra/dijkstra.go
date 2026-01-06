@@ -22,15 +22,17 @@ func ShortestPathsTo(g *adlist.AdjacencyList, sourceVertex int, edgeWeights map[
 	numOfVertices := g.NumOfVertices()
 
 	pathsToSrc := make([]pathToSrc, numOfVertices)
-	vertsToVisit := priorqueue.New[int, int](16) // (infinity - knownShortestDistToSrc) -> vertex
+	vertsToVisit := priorqueue.New[int, int](16) // (-knownShortestDistToSrc) -> vertex
 
-	for i := 0; i < numOfVertices; i++ {
-		pathsToSrc[i] = pathToSrc{
+	for vertex := 0; vertex < numOfVertices; vertex++ {
+		pathsToSrc[vertex] = pathToSrc{
 			src: -1,
-			dist: math.MaxInt,
+			dist: 0,
 		}
+		vertsToVisit.Push(0, vertex)
 	}
 
+	pathsToSrc[sourceVertex] = 
 	vertsToVisit.Push(math.MaxInt, sourceVertex)	
 	for {
 		curr, shouldVisit := vertsToVisit.Pop()
@@ -45,7 +47,7 @@ func ShortestPathsTo(g *adlist.AdjacencyList, sourceVertex int, edgeWeights map[
 			if altDist < pathsToSrc[target].dist {
 				pathsToSrc[target].src = curr
 				pathsToSrc[target].dist = altDist
-				// update priority
+				// TODO: update priority, should still work without it though
 			}
 		}
 	}

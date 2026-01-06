@@ -126,7 +126,7 @@ func TestRemove(t *testing.T, init func() List[int]) {
 			testutils.AssertEquals(t, len(test.expectValues), list.Size())
 
 			index := 0
-			for value := range list.All() {
+			for _, value := range list.All() {
 				testutils.AssertEquals(t, test.expectValues[index], value)
 				index++
 			}

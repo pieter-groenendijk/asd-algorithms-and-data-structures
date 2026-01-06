@@ -25,5 +25,5 @@ type List[TValue any] interface {
 
 	Size() int
 
-	All() iter.Seq[TValue]
+	All() iter.Seq2[int, TValue]
 }
