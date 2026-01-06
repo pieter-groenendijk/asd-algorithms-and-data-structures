@@ -1,72 +1,78 @@
 package adlist
 
 import (
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/bag"
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/swapback"
 )
 
-func (g *AdjacencyList) HaveVertex(vertexId int) bool {
-	return vertexId < len(g.toVertices)
-}
-
-func (g *AdjacencyList) HaveEdge(fromVertexId int, toVertexId int) bool {
-	edgeExists := toVertexId < len(g.fromVertices)
-	if !edgeExists {
-		return false
-	}
-
-	edges := g.fromVertices[toVertexId]
-	edgesLen := len(edges)
-	for i := 0; i < edgesLen; i++ {
-		if edges[i] == fromVertexId {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (g *AdjacencyList) AddVertex(edgeCapacity int) int {
+func (g *AdjacencyList) AddVertex(edgeCap int) int {
 	holesAt, holeAt, holeFound := swapback.Pop(g.holesAt)
 	g.holesAt = holesAt
 	if holeFound {
-		g.toVertices[holeAt] = make([]int, edgeCapacity)
+		g.sourceToTargets[holeAt] = make([]int, edgeCap)
 
 		return holeAt
 	} else {
-		g.toVertices = append(g.toVertices, make([]int, edgeCapacity))
+		g.sourceToTargets = append(g.sourceToTargets, make([]int, edgeCap))
 
-		return len(g.toVertices) - 1
+		return len(g.sourceToTargets) - 1
 	}
 }
 
-func (g *AdjacencyList) RemoveVertex(vertexId int) {
-	fromVertices := g.fromVertices[vertexId] // 
-	
+func (g *AdjacencyList) RemoveVertex(vertex int) {
+	targets := g.sourceToTargets[vertex] 
+	for _, target := range targets {
+		sources := g.targetToSources[target]
+		for at, source := range sources {
+			if source == vertex {
+				g.targetToSources[target] = swapback.Remove(sources, at)
+				break
+			}
+		}
+	}
 
+	sources := g.targetToSources[vertex]
+	for _, source := range sources {
+		targets := g.sourceToTargets[source]
+		for at, target := range targets {
+			if target == vertex {
+				g.sourceToTargets[source] = swapback.Remove(targets, at)
+				break
+			}
+		}
+	}
 
+	g.sourceToTargets[vertex] = nil
+	g.targetToSources[vertex] = nil
+
+	g.holesAt = append(g.holesAt, vertex)
 }
 
 // May return nil slice if the vertex does not exist
-func (g *AdjacencyList) GetEdges(vertexId int) []int {
-	return g.toVertices[vertexId]
+func (g *AdjacencyList) GetEdgesFrom(fromVertex int) []int {
+	return g.sourceToTargets[fromVertex]
 }
 
-func (g *AdjacencyList) AddEdge(fromVertexId int, toVertexId int) {
-	g.toVertices[fromVertexId] = append(g.toVertices[fromVertexId], toVertexId)
+func (g *AdjacencyList) GetEdgesTo(toVertex int) []int {
+	return g.targetToSources[toVertex]
 }
 
-func (g *AdjacencyList) RemoveEdge(fromVertexId int, toVertexId int) {
-	edges := g.toVertices[fromVertexId]
-	if edges == nil {
-		return
+func (g *AdjacencyList) AddEdge(fromVertex int, toVertex int) {
+	g.sourceToTargets[fromVertex] = append(g.sourceToTargets[fromVertex], toVertex)
+}
+
+// O(SE + TE), where SE is the amount of edges the source has, and TE is the amount of edges the target has
+func (g *AdjacencyList) RemoveEdge(sourceVertex int, targetVertex int) {
+	sourcesOfTarget := g.targetToSources[targetVertex]
+	for at, sourceOfTarget := range sourcesOfTarget {
+		if sourceOfTarget == sourceVertex {
+			g.targetToSources[targetVertex] = swapback.Remove(sourcesOfTarget, at)
+		}
 	}
 
-	length := len(edges)
-	for i := 0; i < length; i++ {
-		if edges[i] == toVertexId {
-			g.toVertices[fromVertexId] = swapback.Remove(g.toVertices[fromVertexId], i)
-			break
+	targetsOfSource := g.sourceToTargets[sourceVertex]
+	for at, targetOfSource := range targetsOfSource {
+		if targetOfSource == targetVertex {
+			g.sourceToTargets[sourceVertex] = swapback.Remove(targetsOfSource, at)
 		}
 	}
 }

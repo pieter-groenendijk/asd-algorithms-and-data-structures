@@ -1,13 +1,12 @@
 package graphs
 
-type Id int
-
 type Graph interface {
-	HaveEdge(fromVertexId Id, toVertexId Id) bool
-	GetVertices() map[Id][]Id
-	AddVertex() Id
-	RemoveVertex(id Id)
-	GetEdgesOf(vertexId Id) []Id
-	AddEdge(fromVertexId Id, toVertexId Id) 
-	RemoveEdge(fromVertexId Id, toVertexId Id)
+	HaveVertex(vertex int) bool
+	HaveEdge(fromVertex int, toVertex int) bool
+	AddVertex(edgeCap int) int 
+	RemoveVertex(vertex int)
+	GetEdgesFrom(fromVertex int)
+	GetEdgesTo(toVertex int)
+	AddEdge(fromVertex int, toVertex int) 
+	RemoveEdge(fromVertex int, toVertex int)
 }

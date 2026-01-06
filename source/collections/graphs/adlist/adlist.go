@@ -5,17 +5,17 @@ import (
 
 type AdjacencyList struct {
 	holesAt []int // contains where holes exist in `vertexToEdges`
-	toVertices [][]int // [fromVertexId] -> []toVertexId, answers: What do I point to?
-	fromVertices [][]int // [toVertexId] -> []fromVertexId, answers: What edges point to me?
+	sourceToTargets [][]int // [fromVertexId] -> []toVertexId, answers: What do I point to?
+	targetToSources [][]int // [toVertexId] -> []fromVertexId, answers: What edges point to me?
 }
 
 // initVertCap: the initial capacity of vertices
 // 
 // initEdgeCap: the initial capacity of edges per vertices
-func New(initVertCap int, initEdgeCap int) *AdjacencyList {
+func New(initVertCap int) *AdjacencyList {
 	return &AdjacencyList{
 		holesAt: make([]int, 8),
-		toVertices: make([][]int, initVertCap),
-		fromVertices: make([][]int, initVertCap * initEdgeCap),
+		sourceToTargets: make([][]int, initVertCap),
+		targetToSources: make([][]int, initVertCap),
 	}
 }
