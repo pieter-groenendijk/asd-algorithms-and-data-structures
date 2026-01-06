@@ -36,6 +36,21 @@ control and must reallocate a whole different array and copy the values upong gr
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
 
+### Description
+A list implemented by separate parts that are connected through pointers stored in each. This indirection means
+it does not require a continuous memory like an array to function, making it faster to remove and insert in the
+middle of the list; there is no need for resizing, making performance highly consistent. Yet due to this
+same characteristic of indirection random access is sacrificed. 
+
+Appends have been optimized simply by maintaining and utilizing a `tail`. It represents the last node in the list.
+This avoids going through the whole list, just to add something to the end. Instead, it's inserted straight after
+the tail. The tradeoff is that the constant time of any insert is larger due to checking or at least updating the
+`tail`.
+
+Many of special cases of linked list operations have been eliminated by having a _fake_ `head`; it does not actually
+contain any meaningful data except that it points to the next node. Any inserts or removals of the first node do not
+require checking for the `head` being `nil`, since the `head` is ensured to be there.
+
 \newpage
 ## Comparison
 <!--
