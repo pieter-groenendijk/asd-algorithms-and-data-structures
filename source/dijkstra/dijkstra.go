@@ -1,36 +1,52 @@
 package dijkstra
 
 import (
-	"fmt"
 	"math"
 
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/graphs"
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/priorqueue"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/graphs/adlist"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/priorqueue"
 )
 
-const infinity = math.MaxInt
+// Any vertex which has been checked has a pathToSrc
+type pathToSrc struct {
+	src int 
+	dist int
+}
 
-// returns the shortest path for directed acyclic graphs.
-func ShortestPath[TVertex DistVertex[TEdge], TEdge WeightedEdge[TVertex]](graph DijkstraGraph[TVertex, TEdge], fromNodeId graphs.Id) error {
-	fromNode, err  := graph.GetVertex(fromNodeId)
-	if err != nil {
-		return fmt.Errorf("failed to find fromNode: %w", err)
+type EdgeKey struct {
+	sourceVertex int
+	targetVertex int
+}
+
+func ShortestPathsTo(g *adlist.AdjacencyList, sourceVertex int, edgeWeights map[EdgeKey]int) {
+	numOfVertices := g.NumOfVertices()
+
+	pathsToSrc := make([]pathToSrc, numOfVertices)
+	vertsToVisit := priorqueue.New[int, int](16) // (infinity - knownShortestDistToSrc) -> vertex
+
+	for i := 0; i < numOfVertices; i++ {
+		pathsToSrc[i] = pathToSrc{
+			src: -1,
+			dist: math.MaxInt,
+		}
 	}
 
-	// the set of vertices, we know the shortest paths to
-	processedVertices := make(map[*TVertex]interface{})
-	toProcessVertices := make(priorqueue.PriorityQueue, 10)
+	vertsToVisit.Push(math.MaxInt, sourceVertex)	
+	for {
+		curr, shouldVisit := vertsToVisit.Pop()
+		if !shouldVisit {
+			break
+		}
+		distToSrc := pathsToSrc[curr].dist
 
-	for _, vertex := range graph.AllVertices() {
-		vertex.SetPrevious(nil)
-		vertex.SetDistance(infinity)
-		toProcessVertices.Push()
+		targets := g.GetTargetsOf(curr)
+		for _, target := range targets {
+			altDist := distToSrc + edgeWeights[EdgeKey{curr, target}]
+			if altDist < pathsToSrc[target].dist {
+				pathsToSrc[target].src = curr
+				pathsToSrc[target].dist = altDist
+				// update priority
+			}
+		}
 	}
-	// we're too greedy, let's correct it
-	fromNode.SetPrevious(nil)
-	fromNode.SetDistance(0)
-
-
-
-	return nil
 }

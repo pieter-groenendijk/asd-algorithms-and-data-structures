@@ -4,6 +4,10 @@ import (
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/swapback"
 )
 
+func (g *AdjacencyList) NumOfVertices() int {
+	return len(g.sourceToTargets)
+}
+
 func (g *AdjacencyList) AddVertex(edgeCap int) int {
 	holesAt, holeAt, holeFound := swapback.Pop(g.holesAt)
 	g.holesAt = holesAt
@@ -48,12 +52,12 @@ func (g *AdjacencyList) RemoveVertex(vertex int) {
 }
 
 // May return nil slice if the vertex does not exist
-func (g *AdjacencyList) GetEdgesFrom(fromVertex int) []int {
-	return g.sourceToTargets[fromVertex]
+func (g *AdjacencyList) GetTargetsOf(sourceVertex int) []int {
+	return g.sourceToTargets[sourceVertex]
 }
 
-func (g *AdjacencyList) GetEdgesTo(toVertex int) []int {
-	return g.targetToSources[toVertex]
+func (g *AdjacencyList) GetSourcesOf(targetVertex int) []int {
+	return g.targetToSources[targetVertex]
 }
 
 func (g *AdjacencyList) AddEdge(fromVertex int, toVertex int) {
