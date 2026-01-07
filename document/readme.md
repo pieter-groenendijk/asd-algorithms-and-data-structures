@@ -18,9 +18,16 @@ header-includes:
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
 
-```go
+### Description
+An array that resizes when needed, producing a seemingly growable array outwards.
 
-```
+Sadly due to the nature of Go, an array can't be allocated with variable size at runtime. An array can
+only be allocated with a literal or with a constant. Allocating an array with a size only known at runtime
+is not allowed, instead you'll have to use a slice, which is already a dynamic array. The implementation
+therefore is in reality a dynamic array based of a dynamic array treated as if it's a normal array. The overhead is 
+luckily minimal since in Go data is separated from methods. The space overhead is limited to the slice header,
+which includes a pointer to the array, a length, and a capacity. Runtime overhead is limited to the pointer
+indirection to reach the array.
 
 - In golang, the length of an array is part of it's type, meaning the length must be a constant. Only slices can
 be created with a length specified at runtime, which already is a dynamic array...
@@ -28,6 +35,44 @@ be created with a length specified at runtime, which already is a dynamic array.
 - Not being able to specifically see if there is actually unallocated heap memory after the already defined underlying
 array is something only the built-in slice implementation may know. For our implementation we don't have this granular
 control and must reallocate a whole different array and copy the values upong growing.
+
+### Performance optimizations
+Prepending can be more efficient if the same resizing algorithm would work in both directions. Where upon resizing
+the data structure determines a window determined as the "list". Then prepending would just move a pointer and
+insert before that, just as it would with an append. The tradeoff would be space efficiency. This could be useful
+if ones expects to use both prepend and append on the same list.
+
+### Performance
+Operation | Best | Worst
+|------|---|---|
+| GetAt | `O(1)` | `O(1)` |
+| Append | `O(1)` | `O(n)` |
+| Prepend | `O(n)` | `O(n)` |
+| RemoveAt | `O(1)` | `O(n)` |
+| Remove | `O(n)` | `O(n)` |
+: Dynamic array time complexities
+
+#### GetAt
+Always occurs in `O(1)`.
+
+#### Append
+Best case occurs when there is enough capacity to append. Highly likely to occur.
+
+Worst case occurs when there is not enough capacity to append, requiring a reallocation and copying. Generally
+unlikely to occur.
+
+#### Prepend
+Always occurs in `O(n)` due to it not being optimized to reserve capacity at this side of the list, requiring
+shifting all elements, and optionally a reallocation beforehand.
+
+#### RemoveAt
+Best case occurs when the last element is removed, requiring only the `length` has to be decreased then.
+
+Worst case occurs when the first element is removed, requiring all remaining elements to be shifted to the left.
+
+#### Remove
+Always occurs in `O(n)`. It has to do a linear search of `n` to remove the last element, or perform a
+a `n`-sized shift to left if the first value has to be removed.
 
 \newpage
 ## Linked list
@@ -51,6 +96,63 @@ Many of special cases of linked list operations have been eliminated by having a
 contain any meaningful data except that it points to the next node. Any inserts or removals of the first node do not
 require checking for the `head` being `nil`, since the `head` is ensured to be there.
 
+Operations, such as `InsertAfter` and `RemoveAfter` have been introduced to make mutations in the middle
+of the list efficient when the caller knows the physical location of the node before. Helper methods exist
+to look these up.
+
+### Potential optimizations
+A major benefit of a linked list is it's ability to insert or delete elements generally at constant time, that is
+if we know the node before, or if it's at the end or beginning, not requiring any resizing. Yet, it sacrifices
+space and speed of iteration to achieve this. Perhaps a specialized middle ground is to have a linked list based
+of a dynamic array. Where the array contains a node at every index. Then the order is maintained just as with a 
+normal linked list: a reference (index) in that node to the next node. This ensures the data is stored in an
+continuous block of memory, increasing the spatial locality heavily. Removals can then be done via swapback, and 
+a freelist can be maintained to ensure a dense array. A tradeoff is that it now also enjoys, although more
+contained, same negatives as a dynamic array.
+
+Making it circular will allow more efficient incremental mutations.
+
+### Performance
+Operation | Best | Worst |
+|------|---|---|
+| GetAt | `O(1)` | `O(n)` |
+| Append | `O(1)` | `O(1)` |
+| Prepend | `O(1)` | `O(1)` |
+| RemoveAt | `O(1)` | `O(n)` |
+| Remove | `O(1)` | `O(n)` |
+| | | |
+| InsertAfter | `O(1)` | `O(1)` |
+| RemoveAfter | `O(1)` | `O(1)` |
+: Linked List time complexities
+
+#### GetAt
+Best case occurs when the first element is requested.
+
+Worst case occurs when the last element is requested. The optimization of maintaining a `tail` is not used
+at this moment.
+
+#### Append
+Any `Append` is in constant time. Due to maintaining the `tail`, only updates on some pointers need to be performed.
+
+#### Prepend
+Any `Prepend` is in constant time. Due to maintaining the `head`, only updates on some pointers need to be performed.
+
+#### RemoveAt
+Best case occurs when the first element is removed.
+
+Worst case occurs when the last element is removed. The optimization of maintaining a `tail` is not used
+at this moment.
+
+#### InsertAfter
+Any `InsertAfter` is int constant time. Due to knowing the node before, only updates on some pointers need to be
+performed.
+
+#### RemoveAfter
+Any `InsertAfter` is int constant time. Due to knowing the node before, only updates on some pointers need to be
+performed.
+
+
+
 \newpage
 ## Comparison
 <!--
@@ -60,6 +162,8 @@ require checking for the `head` being `nil`, since the `head` is ensured to be t
     van de concepten time complexity en execution time. Je behandelt hierbij zowel het 
     slechtst mogelijke geval als het best mogelijke geval en legt uit waarin deze van elkaar verschillen.
 -->
+
+
 
 \newpage
 # Priority Queue

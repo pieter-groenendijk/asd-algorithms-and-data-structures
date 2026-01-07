@@ -11,12 +11,8 @@ func (list *ArrayList[TValue]) grow(expectedLength int) []TValue {
 // TODO: Optimize space efficiency: Resize when lots is unused
 func (list *ArrayList[TValue]) removeAt(index int) {
 	newLength := list.length - 1
-	i := 0
-	for ; i < index; i++ {
-		list.space[i] = list.space[i]
-	}
-	for ; i < newLength; i++ {
-		list.space[i] = list.space[i+1]
+	for ; index < newLength; index++ {
+		list.space[index] = list.space[index+1]
 	}
 
 	list.length = newLength

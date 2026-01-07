@@ -6,7 +6,7 @@ import (
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/lists"
 )
 
-func (list *ArrayList[TValue]) Get(index int) TValue {
+func (list *ArrayList[TValue]) GetAt(index int) TValue {
 	return list.space[index]
 }
 
