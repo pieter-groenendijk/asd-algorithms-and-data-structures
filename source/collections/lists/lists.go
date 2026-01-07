@@ -3,7 +3,7 @@ package lists
 // List : a sequence of values
 type List[TValue any] interface {
 	// SetAt replaces the element at the specified position in this list with the specified element.
-	SetAt(value TValue, index int) bool
+	SetAt(index int, value TValue) bool
 	// GetAt returns the element at the specified position in this list.
 	GetAt(index int) (TValue, bool)
 
