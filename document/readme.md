@@ -38,6 +38,7 @@ if ones expects to use both prepend and append on the same list.
 ### Performance
 | Operation | Best   | Worst  |
 |-----------|--------|--------|
+| SetAt     | `O(1)` | `O(1)` |
 | GetAt     | `O(1)` | `O(1)` |
 | Append    | `O(1)` | `O(n)` |
 | Prepend   | `O(n)` | `O(n)` |
@@ -45,8 +46,11 @@ if ones expects to use both prepend and append on the same list.
 | Remove    | `O(n)` | `O(n)` |
 : Dynamic array time complexities
 
+#### SetAt
+Always occurs in `O(1)`, utilizes random access to the underlying array.
+
 #### GetAt
-Always occurs in `O(1)`.
+Always occurs in `O(1)`, utilizes random access to the underlying array.
 
 #### Append
 Best case occurs when there is enough capacity to append. Highly likely to occur.
