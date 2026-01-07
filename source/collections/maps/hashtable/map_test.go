@@ -19,6 +19,14 @@ func Test(t *testing.T) {
 	testutils.AssertEquals(t, true, exists)
 	testutils.AssertEquals(t, 10, value)
 
+	hashTable.Set("blue", 1234)
+	value, exists = hashTable.Get("blue")
+	testutils.AssertEquals(t, true, exists)
+	testutils.AssertEquals(t, 1234, value)
+	value, exists = hashTable.Get("horse")
+	testutils.AssertEquals(t, true, exists)
+	testutils.AssertEquals(t, 10, value)
+
 	hashTable.Set("horse", 5)
 	value, exists = hashTable.Get("horse")
 	testutils.AssertEquals(t, true, exists)
