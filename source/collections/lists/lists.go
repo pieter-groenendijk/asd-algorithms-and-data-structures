@@ -1,29 +1,19 @@
 package lists
 
-import (
-	"iter"
-)
-
-// A sequence of values
+// List : a sequence of values
 type List[TValue any] interface {
-	// Returns the element at the specified position in this list.
-	Get(index int) TValue
+	// SetAt replaces the element at the specified position in this list with the specified element.
+	SetAt(value TValue, index int) bool
+	// GetAt returns the element at the specified position in this list.
+	GetAt(index int) (TValue, bool)
 
-	// Replaces the element at the specified position in this list with the specified element.
-	SetAt(value TValue, index int) error
-	// Adds the specified element to the beginning of this list.
+	// Prepend adds the specified element to the beginning of this list.
 	Prepend(value TValue)
-	// Adds the specified element to the end of this list.
+	// Append adds the specified element to the end of this list.
 	Append(value TValue)
-	// Inserts the specified element at the specified position in this list.
-	// InsertAt(value TValue, index uint)
 
-	// Removes the first occurrence of the specified element from this list, if it is present.
+	// Remove removes the first occurrence of the specified element from this list, if it is present.
 	Remove(value TValue)
-	// Removes the element at the specified position in this list.
+	// RemoveAt removes the element at the specified position in this list.
 	RemoveAt(index int) error
-
-	Size() int
-
-	All() iter.Seq2[int, TValue]
 }

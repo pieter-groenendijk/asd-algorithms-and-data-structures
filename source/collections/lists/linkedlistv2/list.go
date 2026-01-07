@@ -1,13 +1,24 @@
 package linkedlistv2
 
-func (l *LinkedList[TValue]) GetFrom(index int) (TValue, bool) {
+func (l *LinkedList[TValue]) GetAt(index int) (TValue, bool) {
 	node, exists := l.GetNodeAt(index)
 	if !exists {
 		var zeroValue TValue
-		return zeroValue, exists
+		return zeroValue, false
 	}
 
-	return node.value, exists
+	return node.value, true
+}
+
+func (l *LinkedList[TValue]) SetAt(index int, value TValue) bool {
+	node, exists := l.GetNodeAt(index)
+	if !exists {
+		return false
+	}
+
+	node.value = value
+
+	return true
 }
 
 func (l *LinkedList[TValue]) Append(value TValue) {

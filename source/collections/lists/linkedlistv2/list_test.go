@@ -27,6 +27,82 @@ func (l *LinkedList[TValue]) toSlice() []TValue {
 	return slice
 }
 
+func TestSetAt(t *testing.T) {
+	testCases := []struct {
+		name           string
+		operations     func(l *LinkedList[int]) bool
+		expectedReturn bool
+		expectedState  []int
+	}{
+		{
+			name: "SetBeforeBounds",
+			operations: func(l *LinkedList[int]) bool {
+				return l.SetAt(0, 5)
+			},
+			expectedReturn: false,
+			expectedState:  []int{},
+		},
+		{
+			name: "SetAfterBounds",
+			operations: func(l *LinkedList[int]) bool {
+				l.Append(5)
+				l.Append(1)
+
+				return l.SetAt(2, 3)
+			},
+			expectedReturn: false,
+			expectedState:  []int{5, 1},
+		},
+		{
+			name: "SetFirstElement",
+			operations: func(l *LinkedList[int]) bool {
+				l.Append(10)
+				l.Append(123)
+				l.Append(16)
+
+				return l.SetAt(0, 5)
+			},
+			expectedReturn: true,
+			expectedState:  []int{5, 123, 16},
+		},
+		{
+			name: "SetMiddleElement",
+			operations: func(l *LinkedList[int]) bool {
+				l.Append(10)
+				l.Append(123)
+				l.Append(16)
+
+				return l.SetAt(1, 5)
+			},
+			expectedReturn: true,
+			expectedState:  []int{10, 5, 16},
+		},
+		{
+			name: "SetLastElement",
+			operations: func(l *LinkedList[int]) bool {
+				l.Append(10)
+				l.Append(123)
+				l.Append(16)
+
+				return l.SetAt(2, 5)
+			},
+			expectedReturn: true,
+			expectedState:  []int{10, 123, 5},
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			l := new()
+
+			gotReturn := testCase.operations(l)
+
+			testutils.AssertEquals(t, testCase.expectedReturn, gotReturn)
+			testutils.AssertEquals(t, testCase.expectedState, l.toSlice())
+		})
+	}
+}
+
 func TestRemove(t *testing.T) {
 	testCases := []struct {
 		name       string
@@ -182,7 +258,7 @@ func TestGet(t *testing.T) {
 				l.Append(20)
 				l.Append(5)
 
-				value, exists := l.GetFrom(0)
+				value, exists := l.GetAt(0)
 				return []returnValue{
 					{value, exists},
 				}
@@ -196,7 +272,7 @@ func TestGet(t *testing.T) {
 				l.Append(20)
 				l.Append(5)
 
-				value, exists := l.GetFrom(1)
+				value, exists := l.GetAt(1)
 				return []returnValue{
 					{value, exists},
 				}
@@ -210,7 +286,7 @@ func TestGet(t *testing.T) {
 				l.Append(20)
 				l.Append(5)
 
-				value, exists := l.GetFrom(2)
+				value, exists := l.GetAt(2)
 				return []returnValue{
 					{value, exists},
 				}
@@ -218,19 +294,19 @@ func TestGet(t *testing.T) {
 			expected: []returnValue{{5, true}},
 		},
 		{
-			name: "GetFrom",
+			name: "GetAt",
 			operations: func(l *LinkedList[int]) []returnValue {
 				l.Append(10)
 
-				valueOne, existsOne := l.GetFrom(0)
+				valueOne, existsOne := l.GetAt(0)
 
 				l.Append(20)
 
-				valueTwo, existsTwo := l.GetFrom(0)
+				valueTwo, existsTwo := l.GetAt(0)
 
 				l.Append(123)
 
-				valueThree, existsThree := l.GetFrom(0)
+				valueThree, existsThree := l.GetAt(0)
 
 				return []returnValue{
 					{valueOne, existsOne},
@@ -251,9 +327,9 @@ func TestGet(t *testing.T) {
 				l.Append(20)
 				l.Append(5)
 
-				value, exists := l.GetFrom(-1)
+				value, exists := l.GetAt(-1)
 
-				valueTwo, existsTwo := l.GetFrom(-5)
+				valueTwo, existsTwo := l.GetAt(-5)
 
 				return []returnValue{
 					{value, exists},
@@ -268,7 +344,7 @@ func TestGet(t *testing.T) {
 		{
 			name: "GetBeforeBounds",
 			operations: func(l *LinkedList[int]) []returnValue {
-				value, exists := l.GetFrom(0)
+				value, exists := l.GetAt(0)
 				return []returnValue{
 					{value, exists},
 				}
@@ -281,13 +357,13 @@ func TestGet(t *testing.T) {
 				l.Append(10)
 				l.Append(20)
 
-				value, exists := l.GetFrom(2)
+				value, exists := l.GetAt(2)
 
 				l.Append(5)
 
-				valueTwo, existsTwo := l.GetFrom(3)
+				valueTwo, existsTwo := l.GetAt(3)
 
-				valueThree, existsThree := l.GetFrom(math.MaxInt)
+				valueThree, existsThree := l.GetAt(math.MaxInt)
 
 				return []returnValue{
 					{value, exists},

@@ -29,13 +29,6 @@ luckily minimal since in Go data is separated from methods. The space overhead i
 which includes a pointer to the array, a length, and a capacity. Runtime overhead is limited to the pointer
 indirection to reach the array.
 
-- In golang, the length of an array is part of it's type, meaning the length must be a constant. Only slices can
-be created with a length specified at runtime, which already is a dynamic array...
-
-- Not being able to specifically see if there is actually unallocated heap memory after the already defined underlying
-array is something only the built-in slice implementation may know. For our implementation we don't have this granular
-control and must reallocate a whole different array and copy the values upong growing.
-
 ### Performance optimizations
 Prepending can be more efficient if the same resizing algorithm would work in both directions. Where upon resizing
 the data structure determines a window determined as the "list". Then prepending would just move a pointer and
@@ -43,13 +36,13 @@ insert before that, just as it would with an append. The tradeoff would be space
 if ones expects to use both prepend and append on the same list.
 
 ### Performance
-Operation | Best | Worst
-|------|---|---|
-| GetAt | `O(1)` | `O(1)` |
-| Append | `O(1)` | `O(n)` |
-| Prepend | `O(n)` | `O(n)` |
-| RemoveAt | `O(1)` | `O(n)` |
-| Remove | `O(n)` | `O(n)` |
+| Operation | Best   | Worst  |
+|-----------|--------|--------|
+| GetAt     | `O(1)` | `O(1)` |
+| Append    | `O(1)` | `O(n)` |
+| Prepend   | `O(n)` | `O(n)` |
+| RemoveAt  | `O(1)` | `O(n)` |
+| Remove    | `O(n)` | `O(n)` |
 : Dynamic array time complexities
 
 #### GetAt
@@ -71,7 +64,7 @@ Best case occurs when the last element is removed, requiring only the `length` h
 Worst case occurs when the first element is removed, requiring all remaining elements to be shifted to the left.
 
 #### Remove
-Always occurs in `O(n)`. It has to do a linear search of `n` to remove the last element, or perform a
+Always occurs in `O(n)`. It has to do a linear search of `n` to remove the last element, or perform
 a `n`-sized shift to left if the first value has to be removed.
 
 \newpage
@@ -113,17 +106,23 @@ contained, same negatives as a dynamic array.
 Making it circular will allow more efficient incremental mutations.
 
 ### Performance
-Operation | Best | Worst |
-|------|---|---|
-| GetAt | `O(1)` | `O(n)` |
-| Append | `O(1)` | `O(1)` |
-| Prepend | `O(1)` | `O(1)` |
-| RemoveAt | `O(1)` | `O(n)` |
-| Remove | `O(1)` | `O(n)` |
-| | | |
+| Operation   | Best   | Worst  |
+|-------------|--------|--------|
+| SetAt       | `O(1)` | `O(n)` |
+| GetAt       | `O(1)` | `O(n)` |
+| Append      | `O(1)` | `O(1)` |
+| Prepend     | `O(1)` | `O(1)` |
+| RemoveAt    | `O(1)` | `O(n)` |
+| Remove      | `O(1)` | `O(n)` |
+|             |        |        |
 | InsertAfter | `O(1)` | `O(1)` |
 | RemoveAfter | `O(1)` | `O(1)` |
 : Linked List time complexities
+
+#### SetAt
+Best case occurs when the first element is set, requiring constant linked list traversal.
+
+Worst case occurs when the last element is set, requiring full linked list traversal.
 
 #### GetAt
 Best case occurs when the first element is requested.
