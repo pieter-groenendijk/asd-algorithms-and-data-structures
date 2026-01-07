@@ -49,11 +49,11 @@ func (l *LinkedList[TValue]) Remove(value TValue) {
 	l.RemoveAfter(beforeNode)
 }
 
-func (l *LinkedList[TValue]) All() iter.Seq[TValue] {
-	return func(yield func(TValue) bool) {
+func (l *LinkedList[TValue]) All() iter.Seq[*TValue] {
+	return func(yield func(*TValue) bool) {
 		currNode := l.head.next
 		for currNode != nil {
-			if !yield(currNode.value) {
+			if !yield(&currNode.value) {
 				return
 			}
 			currNode = currNode.next

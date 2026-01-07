@@ -429,7 +429,7 @@ and the `writeTo` as an new list. Lessening time spent on memory management and 
 The iterative approach, opposed to resursive, also lessens time and space usage, since there is no overhead done for this
 algorithm on the call stack.
 
-### Potential improvements
+### Potential optimizations
 Each merge iteration uses each item exactly once, and if the length of the list is larger than the CPU cache capacity, then
 these are removed from it before they are used again in the next iteration. This generally leads to dreadful locality. Temporal 
 locality may be improved by only merging subarrays that fit into the cache, and then merging the whole array from that point on.
@@ -465,6 +465,16 @@ utilization.
     - Je legt uit hoe je hashing-algoritme werkt en onderbouwt je keuze voor het specifieke algoritme.
     - Je legt uit welke onderdelen van je code zich lenen voor verbeteringen die impact hebben op de performance.
 -->
+
+### Description
+
+### Noteworthy optimizations
+
+### Potential optimizations
+Use straight _unsafe_ binary interpretation of given keys, instead of explicitly type casting to a `[]byte` which
+requires a copy to be made.
+
+Resizing, and specifically incremental resizing, to keep operations just as efficient as upon initialization.
 
 \newpage
 # Binary Search

@@ -1,6 +1,6 @@
 package hashtable
 
-func (table *HashTable[TKey, TValue]) Get(key TKey) (TValue, error) {
+func (table *HashTable[TKey, TValue]) Get(key TKey) (TValue, bool) {
 	return table.getBucket(key).Get(key)
 }
 
