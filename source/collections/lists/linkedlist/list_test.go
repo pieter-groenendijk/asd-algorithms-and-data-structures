@@ -1,4 +1,4 @@
-package linkedlistv2
+package linkedlist
 
 import (
 	"math"

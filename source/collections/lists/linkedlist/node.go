@@ -1,60 +1,89 @@
-package linkedlist 
+package linkedlist
 
-import "github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections"
-
-type Node[TKey comparable, TValue any] interface {
-	Is(key TKey) bool
-	Value() TValue
-	SetValue(value TValue)
-	Next() Node[TKey, TValue]
-	SetNext(node Node[TKey, TValue])
+type Node[TValue any] struct {
+	value TValue
+	next  *Node[TValue]
 }
 
-func (l *LinkedList[TKey, TValue]) GetNodeBefore(key TKey) (Node[TKey, TValue], error) {
-	currentNode := l.dummyHead
-	afterNode := currentNode.Next()
-	for {
-		if afterNode == nil {
-			return nil, collections.ErrNotFound
-		}
-
-		if afterNode.Is(key) {
-			return currentNode, nil
-		}
-
-		currentNode = afterNode
-		afterNode = afterNode.Next()
+func NewNode[TValue any](value TValue) *Node[TValue] {
+	return &Node[TValue]{
+		value: value,
+		next:  nil,
 	}
 }
 
-func (l *LinkedList[TKey, TValue]) GetNode(key TKey) (Node[TKey, TValue], error) {
-	currentNode := l.dummyHead.Next() // There is no usecase to return the administrative node here.
-	for {
-		if currentNode == nil {
-			return nil, collections.ErrNotFound
+func (l *LinkedList[TValue]) GetNodeBefore(value TValue) (*Node[TValue], bool) {
+	currNode := l.head
+	afterNode := currNode.next
+	for afterNode != nil {
+		if l.equalsFunc(value, afterNode.value) {
+			return currNode, true
 		}
 
-		if currentNode.Is(key) {
-			return currentNode, nil
-		}
-
-		currentNode = currentNode.Next()
+		currNode = afterNode
+		afterNode = afterNode.next
 	}
+
+	return nil, false
 }
 
-// size is not right
-func (l *LinkedList[TKey, TValue]) RemoveAfter(beforeNode Node[TKey, TValue]) {
-	afterNode := beforeNode.Next()
+func (l *LinkedList[TValue]) GetNodeBeforeAt(index int) (*Node[TValue], bool) {
+	if index < 0 || index >= l.length {
+		return nil, false
+	}
+
+	currNode := l.head
+	for i := 0; i < index; i++ {
+		currNode = currNode.next
+	}
+
+	if currNode == nil {
+		return nil, false
+	}
+
+	return currNode, true
+}
+
+func (l *LinkedList[TValue]) GetNodeAt(index int) (*Node[TValue], bool) {
+	if index < 0 || index >= l.length {
+		return nil, false
+	}
+
+	currNode := l.head.next
+	for i := 0; i < index; i++ {
+		currNode = currNode.next
+	}
+
+	if currNode == nil {
+		return nil, false
+	}
+
+	return currNode, true
+}
+
+func (l *LinkedList[TValue]) RemoveAfter(beforeNode *Node[TValue]) {
+	afterNode := beforeNode.next
 	if afterNode == nil {
-		return 
+		return
 	}
 
-	beforeNode.SetNext(afterNode.Next())
+	beforeNode.next = afterNode.next
+
+	if beforeNode.next == nil {
+		l.tail = beforeNode
+	}
+
+	l.length--
 }
 
-func (l *LinkedList[TKey, TValue]) InsertAfter(beforeNode, newNode Node[TKey, TValue]) {
-	afterNode := beforeNode.Next()
+func (l *LinkedList[TValue]) InsertAfter(beforeNode, newNode *Node[TValue]) {
+	afterNode := beforeNode.next
+	if afterNode == nil {
+		l.tail = newNode
+	}
 
-	beforeNode.SetNext(newNode)
-	newNode.SetNext(afterNode)
+	beforeNode.next = newNode
+	newNode.next = afterNode
+
+	l.length++
 }

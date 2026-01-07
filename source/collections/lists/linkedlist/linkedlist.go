@@ -1,20 +1,22 @@
 package linkedlist
 
-// TKey is used for comparison checks. Usually TKey and TValue are one.
-type LinkedList[TKey comparable, TValue any] struct {
-	dummyHead   Node[TKey, TValue] // first node; a dummy node to prevent conditionals
-	appendAfter Node[TKey, TValue] // tail, not guaranteed to be a node containing actual values
+type EqualsFunc[TValue any] func(thisValue TValue, thatValue TValue) bool
+
+type LinkedList[TValue any] struct {
+	head       *Node[TValue]
+	tail       *Node[TValue]
+	equalsFunc EqualsFunc[TValue]
+	length     int
 }
 
-func create[TKey comparable, TValue any](dummyHead Node[TKey, TValue]) *LinkedList[TKey, TValue] {
-	return &LinkedList[TKey, TValue]{
-		dummyHead:   dummyHead,
-		appendAfter: dummyHead,
+func New[TValue any](equalsFunc EqualsFunc[TValue]) *LinkedList[TValue] {
+	var zeroValue TValue
+	head := NewNode(zeroValue)
+
+	return &LinkedList[TValue]{
+		head:       head,
+		tail:       head,
+		equalsFunc: equalsFunc,
+		length:     0,
 	}
-}
-
-func New[TValue comparable]() *LinkedList[TValue, TValue] {
-	var dummyValue TValue
-
-	return create(NewBasicNode(dummyValue, nil))
 }
