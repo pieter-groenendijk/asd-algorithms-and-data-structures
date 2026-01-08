@@ -492,6 +492,15 @@ func Sort[T cmp.Ordered](list []T) []T {
 Worst case time complexity: `O(n log n)`
 Worst case space complexity: `O(n)`
 
+BenchmarkSortTinyLength
+BenchmarkSortTinyLength-4      	 8932950	       118.2 ns/op
+BenchmarkSortSmallLength
+BenchmarkSortSmallLength-4     	   80596	     14150 ns/op
+BenchmarkSortMediumLength
+BenchmarkSortMediumLength-4    	    7016	    167337 ns/op
+BenchmarkSortLargeLength
+BenchmarkSortLargeLength-4     	     487	   2407848 ns/op
+
 It starts with the smallest unit of partition that is meaningful and sorted by definition: a one item partition.
 
 Then, every iteration the whole array's partitions are _merged_ into a 
@@ -534,6 +543,15 @@ utilization.
     behandelt hierbij zowel het slechtst mogelijke geval als het best mogelijke geval en 
     legt uit waarin deze van elkaar verschillen.
 --> 
+
+BenchmarkSortTinyLength
+BenchmarkSortTinyLength-4     	68335273	        15.40 ns/op
+BenchmarkSortSmallLength
+BenchmarkSortSmallLength-4    	 1000000	      1055 ns/op
+BenchmarkSortMediumLength
+BenchmarkSortMediumLength-4   	  111880	     10653 ns/op
+BenchmarkSortLargeLength
+BenchmarkSortLargeLength-4    	       1	1775333795 ns/op
 
 \newpage
 # Hash Table

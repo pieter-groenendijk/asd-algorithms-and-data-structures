@@ -26,15 +26,3 @@ func BenchmarkSortMediumLength(b *testing.B) {
 func BenchmarkSortLargeLength(b *testing.B) {
 	sorting.BenchmarkSortLargeLength(b, sorting.AsSortFunc[int](Sort))
 }
-
-func BenchmarkSortAlreadySorted(b *testing.B) {
-	sorting.BenchmarkSortAlreadySorted(b, sorting.AsSortFunc[int](Sort))
-}
-
-func BenchmarkSmallValueRange(b *testing.B) {
-	sorting.BenchmarkSmallValueRange(b, sorting.AsSortFunc[int](Sort))
-}
-
-func BenchmarkLargeValueRange(b *testing.B) {
-	sorting.BenchmarkLargeValueRange(b, sorting.AsSortFunc[int](Sort))
-}
