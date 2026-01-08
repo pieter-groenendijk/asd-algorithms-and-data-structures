@@ -3,7 +3,7 @@ package priorqueue
 import (
 	"cmp"
 
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/heaps/binheap"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/heaps/binheap"
 )
 
 // Alias of a binary heap

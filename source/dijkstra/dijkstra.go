@@ -4,12 +4,12 @@ import (
 	"math"
 
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/graphs/adlist"
-	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/priorqueue"
+	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/collections/priorqueue"
 )
 
 // Any vertex which has been checked has a pathToSrc
 type pathToSrc struct {
-	src int 
+	src  int
 	dist int
 }
 
@@ -26,14 +26,14 @@ func ShortestPathsTo(g *adlist.AdjacencyList, sourceVertex int, edgeWeights map[
 
 	for vertex := 0; vertex < numOfVertices; vertex++ {
 		pathsToSrc[vertex] = pathToSrc{
-			src: -1,
+			src:  -1,
 			dist: 0,
 		}
 		vertsToVisit.Push(0, vertex)
 	}
 
-	pathsToSrc[sourceVertex] = 
-	vertsToVisit.Push(math.MaxInt, sourceVertex)	
+	pathsToSrc[sourceVertex] =
+		vertsToVisit.Push(math.MaxInt, sourceVertex)
 	for {
 		curr, shouldVisit := vertsToVisit.Pop()
 		if !shouldVisit {

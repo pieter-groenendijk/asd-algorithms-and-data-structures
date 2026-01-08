@@ -1,4 +1,4 @@
-package binheap 
+package binheap
 
 import "cmp"
 

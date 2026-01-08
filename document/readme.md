@@ -468,6 +468,8 @@ utilization.
 
 ### Description
 
+### Performance
+
 ### Noteworthy optimizations
 
 ### Potential optimizations
@@ -475,6 +477,9 @@ Use straight _unsafe_ binary interpretation of given keys, instead of explicitly
 requires a copy to be made.
 
 Resizing, and specifically incremental resizing, to keep operations just as efficient as upon initialization.
+
+Use a dynamic array instead of a linked list. In well optimized hash tables buckets are kept small to maintain
+an amortized time complexity of `O(1)`
 
 \newpage
 # Binary Search
