@@ -1,6 +1,7 @@
 package dijkstra
 
 import (
+	"math"
 	"testing"
 
 	"github.com/pieter-groenendijk/asd-algorithms-and-data-structures/testutils"
@@ -31,10 +32,14 @@ func TestShortestPath(t *testing.T) {
 
 		gottenPaths := g.ShortestPathsTo(id, id)
 
-		testutils.AssertEquals(t, gottenPaths[id], Path{
-			src:  -1,
-			dist: 0,
-		})
+		testutils.AssertEquals(
+			t,
+			Path{
+				src:  -1,
+				dist: 0,
+			},
+			gottenPaths[id],
+		)
 	})
 
 	t.Run("noPath", func(t *testing.T) {
@@ -45,10 +50,14 @@ func TestShortestPath(t *testing.T) {
 
 		gottenPaths := g.ShortestPathsTo(idOne, idTwo)
 
-		testutils.AssertEquals(t, gottenPaths[idTwo], Path{
-			src:  -1,
-			dist: 0,
-		})
+		testutils.AssertEquals(
+			t,
+			gottenPaths[idTwo],
+			Path{
+				src:  -1,
+				dist: math.MaxInt,
+			},
+		)
 	})
 
 	t.Run("directShortestPath", func(t *testing.T) {
