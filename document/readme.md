@@ -42,7 +42,7 @@ if ones expects to use both prepend and append on the same list.
 | GetAt     | `O(1)` | `O(1)` |
 | Append    | `O(1)` | `O(n)` |
 | Prepend   | `O(n)` | `O(n)` |
-| RemoveAt  | `O(1)` | `O(n)` |
+| RemoveAt  | `O(n)` | `O(n)` |
 | Remove    | `O(n)` | `O(n)` |
 : Dynamic array time complexities
 
@@ -489,6 +489,7 @@ func Sort[T cmp.Ordered](list []T) []T {
 }
 ```
 ### Description
+Best case time complexity: `O(n log n)`
 Worst case time complexity: `O(n log n)`
 Worst case space complexity: `O(n)`
 
