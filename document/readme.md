@@ -46,6 +46,36 @@ if ones expects to use both prepend and append on the same list.
 | Remove    | `O(n)` | `O(n)` |
 : Dynamic array time complexities
 
+BenchmarkSetAt
+BenchmarkSetAt/100
+BenchmarkSetAt/100-4  	396980238	         2.983 ns/op
+BenchmarkSetAt/1000
+BenchmarkSetAt/1000-4 	456585552	         2.492 ns/op
+BenchmarkSetAt/10000
+BenchmarkSetAt/10000-4         	494775049	         2.361 ns/op
+BenchmarkSetAt/100000
+BenchmarkSetAt/100000-4        	496438935	         2.400 ns/op
+
+BenchmarkGetAt
+BenchmarkGetAt/100
+BenchmarkGetAt/100-4           	434404981	         2.727 ns/op
+BenchmarkGetAt/1000
+BenchmarkGetAt/1000-4          	437471620	         2.723 ns/op
+BenchmarkGetAt/10000
+BenchmarkGetAt/10000-4         	445334864	         2.690 ns/op
+BenchmarkGetAt/100000
+BenchmarkGetAt/100000-4        	442616635	         2.693 ns/op
+
+BenchmarkAppend
+BenchmarkAppend/Worst-100
+BenchmarkAppend/Worst-100-4    	 2707586	       441.1 ns/op
+BenchmarkAppend/Worst-1000
+BenchmarkAppend/Worst-1000-4   	  825801	      1344 ns/op
+BenchmarkAppend/Worst-10000
+BenchmarkAppend/Worst-10000-4  	  115230	     11820 ns/op
+BenchmarkAppend/Worst-100000
+BenchmarkAppend/Worst-100000-4 	    2841	    451452 ns/op
+
 #### SetAt
 Always occurs in `O(1)`, utilizes random access to the underlying array.
 
@@ -141,6 +171,12 @@ Any `Append` is in constant time. Due to maintaining the `tail`, only updates on
 Any `Prepend` is in constant time. Due to maintaining the `head`, only updates on some pointers need to be performed.
 
 #### RemoveAt
+Best case occurs when the first element is removed.
+
+Worst case occurs when the last element is removed. The optimization of maintaining a `tail` is not used
+at this moment.
+
+#### Remove
 Best case occurs when the first element is removed.
 
 Worst case occurs when the last element is removed. The optimization of maintaining a `tail` is not used

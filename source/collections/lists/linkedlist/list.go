@@ -31,13 +31,15 @@ func (l *LinkedList[TValue]) Prepend(value TValue) {
 	l.InsertAfter(l.head, NewNode(value))
 }
 
-func (l *LinkedList[TValue]) RemoveAt(index int) {
+func (l *LinkedList[TValue]) RemoveAt(index int) error {
 	beforeNode, exists := l.GetNodeBeforeAt(index)
 	if !exists {
-		return
+		return nil
 	}
 
 	l.RemoveAfter(beforeNode)
+
+	return nil
 }
 
 func (l *LinkedList[TValue]) Remove(value TValue) {
