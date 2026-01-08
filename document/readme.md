@@ -153,6 +153,47 @@ Making it circular will allow more efficient incremental mutations.
 | RemoveAfter | `O(1)` | `O(1)` |
 : Linked List time complexities
 
+BenchmarkSetAt
+BenchmarkSetAt/FirstElement-100
+BenchmarkSetAt/FirstElement-100-4         	399138332	         2.880 ns/op
+BenchmarkSetAt/FirstElement-1000
+BenchmarkSetAt/FirstElement-1000-4        	433926813	         2.762 ns/op
+BenchmarkSetAt/FirstElement-10000
+BenchmarkSetAt/FirstElement-10000-4       	433902901	         2.758 ns/op
+BenchmarkSetAt/FirstElement-100000
+BenchmarkSetAt/FirstElement-100000-4      	420236277	         2.767 ns/op
+BenchmarkSetAt/LastElement-100
+BenchmarkSetAt/LastElement-100-4          	10770968	       109.1 ns/op
+BenchmarkSetAt/LastElement-1000
+BenchmarkSetAt/LastElement-1000-4         	  843501	      1365 ns/op
+BenchmarkSetAt/LastElement-10000
+BenchmarkSetAt/LastElement-10000-4        	   79680	     14976 ns/op
+BenchmarkSetAt/LastElement-100000
+BenchmarkSetAt/LastElement-100000-4       	    6944	    206997 ns/op
+BenchmarkGetAt
+BenchmarkGetAt/FirstElement-100
+BenchmarkGetAt/FirstElement-100-4         	345588264	         3.453 ns/op
+BenchmarkGetAt/FirstElement-1000
+BenchmarkGetAt/FirstElement-1000-4        	352650915	         3.392 ns/op
+BenchmarkGetAt/FirstElement-10000
+BenchmarkGetAt/FirstElement-10000-4       	353544301	         3.373 ns/op
+BenchmarkGetAt/FirstElement-100000
+BenchmarkGetAt/FirstElement-100000-4      	355348230	         3.381 ns/op
+BenchmarkGetAt/LastElement-100
+BenchmarkGetAt/LastElement-100-4          	10894947	       108.2 ns/op
+BenchmarkGetAt/LastElement-1000
+BenchmarkGetAt/LastElement-1000-4         	  873637	      1346 ns/op
+BenchmarkGetAt/LastElement-10000
+BenchmarkGetAt/LastElement-10000-4        	   83584	     14172 ns/op
+BenchmarkGetAt/LastElement-100000
+BenchmarkGetAt/LastElement-100000-4       	    7682	    156266 ns/op
+BenchmarkAppend
+BenchmarkAppend/100
+BenchmarkAppend/100-4                     	 6845341	       181.6 ns/op
+BenchmarkAppend/1000
+BenchmarkAppend/1000-4                    	 6003750	       202.8 ns/op
+BenchmarkAppend/10000
+
 #### SetAt
 Best case occurs when the first element is set, requiring constant linked list traversal.
 
@@ -579,6 +620,16 @@ which is checked for equality to produce the desired function return types.
 ### Complexity
 The time complexity stays the same for every non-zero input since it always keeps halving 
 until there is one value left: `O(logN)`, where `N == len(values)`
+
+BenchmarkSearch
+BenchmarkSearch/Best-100
+BenchmarkSearch/Best-100-4         	80513196	        13.03 ns/op
+BenchmarkSearch/Best-1000
+BenchmarkSearch/Best-1000-4        	71219486	        17.00 ns/op
+BenchmarkSearch/Best-10000
+BenchmarkSearch/Best-10000-4       	45908029	        25.15 ns/op
+BenchmarkSearch/Best-100000
+BenchmarkSearch/Best-100000-4      	38398981	        31.56 ns/op
 
 ### Execution time
 
