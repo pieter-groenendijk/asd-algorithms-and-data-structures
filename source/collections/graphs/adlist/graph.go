@@ -5,7 +5,7 @@ import (
 )
 
 func (g *AdjacencyList[TVertex, TEdge]) NumOfVertices() int {
-	return len(g.sourceToTargets)
+	return g.numOfVertices
 }
 
 func (g *AdjacencyList[TVertex, TEdge]) AddVertex(vertex TVertex, edgeCap int) int {
@@ -13,13 +13,17 @@ func (g *AdjacencyList[TVertex, TEdge]) AddVertex(vertex TVertex, edgeCap int) i
 
 	g.holesAt = holesAt
 
+	g.numOfVertices++
+
 	if holeFound {
+		g.targetToSources[holeAt] = make([]int, 0, edgeCap)
 		g.sourceToTargets[holeAt] = make([]int, 0, edgeCap)
 		g.edges[holeAt] = make([]TEdge, 0, edgeCap)
 		g.vertices[holeAt] = vertex
 
 		return holeAt
 	} else {
+		g.targetToSources = append(g.targetToSources, make([]int, 0, edgeCap))
 		g.sourceToTargets = append(g.sourceToTargets, make([]int, 0, edgeCap))
 		g.edges = append(g.edges, make([]TEdge, 0, edgeCap))
 		g.vertices = append(g.vertices, vertex)
@@ -63,6 +67,8 @@ func (g *AdjacencyList[TVertex, TEdge]) RemoveVertex(vertex int) {
 
 	// Make our delete traceable
 	g.holesAt = append(g.holesAt, vertex)
+
+	g.numOfVertices--
 }
 
 func (g *AdjacencyList[TVertex, TEdge]) GetTargetsOf(sourceVertex int) []int {

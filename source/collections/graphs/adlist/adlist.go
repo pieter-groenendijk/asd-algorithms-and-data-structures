@@ -8,6 +8,8 @@ type AdjacencyList[TVertex any, TEdge any] struct {
 	// Additional data
 	vertices []TVertex // may be nil, [vertexId] -> TVertex
 	edges    [][]TEdge // may be nil, mirrors sourceToTargets, [fromVertexId] -> []toVertexId -> TEdge
+
+	numOfVertices int
 }
 
 // initVertCap: the initial capacity of vertices
@@ -15,10 +17,11 @@ type AdjacencyList[TVertex any, TEdge any] struct {
 // initEdgeCap: the initial capacity of edges per vertices
 func New[TVertex any, TEdge any](initVertCap int) *AdjacencyList[TVertex, TEdge] {
 	return &AdjacencyList[TVertex, TEdge]{
-		holesAt:         make([]int, 8),
+		holesAt:         make([]int, 0, 8),
 		sourceToTargets: make([][]int, 0, initVertCap),
 		targetToSources: make([][]int, 0, initVertCap),
 		vertices:        make([]TVertex, 0, initVertCap),
 		edges:           make([][]TEdge, 0, initVertCap),
+		numOfVertices:   0,
 	}
 }
