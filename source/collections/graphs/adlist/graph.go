@@ -61,11 +61,10 @@ func (g *AdjacencyList[TVertex, TEdge]) RemoveVertex(vertex int) {
 	var zeroVertex TVertex // this only helps if the user gave a pointer type, or a struct with inner pointer types.
 	g.vertices[vertex] = zeroVertex
 
-	// Make our delete tracable
+	// Make our delete traceable
 	g.holesAt = append(g.holesAt, vertex)
 }
 
-// May return nil slice if the vertex does not exist
 func (g *AdjacencyList[TVertex, TEdge]) GetTargetsOf(sourceVertex int) []int {
 	return g.sourceToTargets[sourceVertex]
 }
@@ -81,7 +80,6 @@ func (g *AdjacencyList[TVertex, TEdge]) AddEdge(fromVertex int, toVertex int, ed
 	g.targetToSources[toVertex] = append(g.targetToSources[toVertex], fromVertex)
 }
 
-// O(SE + TE), where SE is the amount of edges the source has, and TE is the amount of edges the target has
 func (g *AdjacencyList[TVertex, TEdge]) RemoveEdge(sourceVertex int, targetVertex int) {
 	// Disconnect incoming
 	sourcesOfTarget := g.targetToSources[targetVertex]
@@ -99,4 +97,21 @@ func (g *AdjacencyList[TVertex, TEdge]) RemoveEdge(sourceVertex int, targetVerte
 			g.edges[sourceVertex] = swapback.Remove(g.edges[sourceVertex], at)
 		}
 	}
+}
+
+// Should be built more defensive
+func (g *AdjacencyList[TVertex, TEdge]) GetVertexValue(vertexId int) TVertex {
+	return g.vertices[vertexId]
+}
+
+// Should be built more defensive
+func (g *AdjacencyList[TVertex, TEdge]) GetEdgeValue(sourceVertexId int, targetVertexId int) TEdge {
+	targetsOfSource := g.sourceToTargets[sourceVertexId]
+	for at, target := range targetsOfSource {
+		if target == targetVertexId {
+			return g.edges[sourceVertexId][at]
+		}
+	}
+
+	panic("")
 }
